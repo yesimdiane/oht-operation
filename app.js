@@ -627,4 +627,4 @@ q("#submit-all-decisions")
         alert(error.message);
       }
     }
-  );
+  )
