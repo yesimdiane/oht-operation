@@ -1,20 +1,22 @@
-# OHT Operations Prototype
+# OHT Internal Ops Dashboard
 
-Static HTML prototype for the OHT daily operations workflow.
+Fresh prototype for the OHT internal operating system.
 
-## Pages
-- `index.html` — CEO Main Dashboard
-- `department-approval.html` — Department approval queue (Project Request + Asking Approval)
-- `submit-project.html` — Team Member project submission
-- `ceo-approval.html` — CEO project review / approval
-- `approval-request.html` — In-project CEO approval request detail
-- `project.html` — Approved project + daily update
+Core model:
+PROJECT → TASK → DEPENDENCY → DECISION NEEDED → OWNER → STATUS → NEXT ACTION
 
-## Flow
-Team Member submits project → CEO approval queue → CEO reviews/comments/revises/approves → CEO sets priority → approved project becomes active → team member submits daily updates → CEO dashboard shows progress and departments needing CEO action.
+Pages:
+- index.html — CEO decision dashboard
+- submit-project.html — team member project proposal
+- ceo-approval.html — CEO project approval/revision
+- project.html — approved project + task/dependency view
+- review-all.html — CEO “at one go” input review
+- daily-update.html — team member daily update
 
-## Run in GitHub Codespaces
-Open the repository in Codespaces and preview `index.html` with any static-server extension or command, e.g. `python3 -m http.server 8000`.
+Status set:
+DRAFT → WAITING FOR APPROVAL → READY → IN PROGRESS → BLOCKED → DONE
 
-## Next step
-Replace static sample data with Airtable-backed data after the UI flow is approved.
+Important rule:
+OWNER and WAITING ON are separate fields.
+
+This is a static front-end prototype. Airtable/backend wiring comes next.
