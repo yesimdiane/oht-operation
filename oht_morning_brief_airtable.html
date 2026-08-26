@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OHT Morning Brief - Daily Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .title {
+            font-size: 40px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #999;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 0;
+        }
+
+        .tab {
+            padding: 12px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: #ffffff;
+            border: 1px solid #d0d0d0;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #999;
+        }
+
+        .tab:hover {
+            color: #000;
+            background: #fafafa;
+        }
+
+        .tab.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 20px;
+        }
+
+        /* Update Rows */
+        .update-rows {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .update-row {
+            display: grid;
+            grid-template-columns: 120px 1fr 200px 80px;
+            gap: 24px;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.2s;
+        }
+
+        .update-row:last-child {
+            border-bottom: none;
+        }
+
+        .update-row:hover {
+            background: #fafafa;
+        }
+
+        .update-name {
+            font-weight: 600;
+            color: #000;
+            font-size: 13px;
+        }
+
+        .update-role {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .update-project-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .update-project {
+            font-weight: 600;
+            color: #000;
+            font-size: 13px;
+        }
+
+        .update-details {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .update-metric {
+            text-align: right;
+            font-size: 20px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .update-metric-label {
+            font-size: 9px;
+            color: #999;
+        }
+
+        .update-priority {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .priority-dropdown {
+            padding: 6px 10px;
+            font-size: 11px;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            background: #ffffff;
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22%3e%3cpolyline points=%226 9 12 15 18 9%22%3e%3c/polyline%3e%3c/svg%3e');
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            padding-right: 28px;
+        }
+
+        .priority-dropdown:hover {
+            border-color: #000;
+        }
+
+        /* CEO Action Needed */
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .action-card {
+            background: #ffffff;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-card:hover {
+            border-color: #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .action-card.urgent {
+            border: 2px solid #000;
+            background: #fafafa;
+        }
+
+        .action-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .action-team {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 12px;
+        }
+
+        .action-count {
+            font-size: 28px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .action-warning {
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 6px;
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .error {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 4px;
+            padding: 16px;
+            color: #856404;
+            margin: 20px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .update-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .update-metric {
+                text-align: left;
+            }
+
+            .title {
+                font-size: 28px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .action-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">OHT / Daily</div>
+            <h1 class="title">Main Dashboard</h1>
+            <p class="subtitle">CEO morning check · <span id="currentDate">August 26, 2026</span></p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(event, 'marketing')">Marketing</div>
+            <div class="tab" onclick="switchTab(event, 'shipping')">Shipping</div>
+            <div class="tab" onclick="switchTab(event, 'inventory')">Inventory</div>
+            <div class="tab" onclick="switchTab(event, 'content')">Content</div>
+        </div>
+
+        <!-- Yesterday's Update Section -->
+        <div class="section">
+            <div class="section-title">Yesterday's OHT Update</div>
+            <div class="update-rows" id="updateRows">
+                <div class="loading">Loading team updates from Airtable...</div>
+            </div>
+        </div>
+
+        <!-- CEO Action Needed Section -->
+        <div class="section">
+            <div class="section-title">CEO Action Needed</div>
+            <div class="action-cards" id="actionCards">
+                <div class="loading">Loading action items...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Airtable Configuration
+        const AIRTABLE_BASE_ID = 'appvTfwLel9sij2oi';
+        const AIRTABLE_TABLE_ID = 'tblvmTCbQA9pb9Lwl';
+        const AIRTABLE_API_KEY = 'YOUR_API_KEY_HERE'; // User will need to add this
+
+        // Sample team data (placeholder - will be replaced by Airtable)
+        const teamData = [
+            {
+                name: 'DIANE',
+                role: 'Influencer Lead',
+                project: 'Influencer Partnership Expansion',
+                details: '12 outreach · 6 follow-ups · 2 confirmed',
+                metric: '7 / 10',
+                metricLabel: 'Confirmed collaborations',
+                priority: 'Priority 01'
+            },
+            {
+                name: 'NAOMI',
+                role: 'Content Manager',
+                project: 'Short-form Content Growth',
+                details: '3 concepts · 2 drafts · 1 posted',
+                metric: '8 / 12',
+                metricLabel: 'Weekly posts',
+                priority: 'Priority 02'
+            },
+            {
+                name: 'ANDY',
+                role: 'Operations',
+                project: 'Customer Resolution SLA',
+                details: '18 cases closed · 3 pending',
+                metric: '91%',
+                metricLabel: '24h response rate',
+                priority: 'Priority 03'
+            },
+            {
+                name: 'JAY',
+                role: 'Social',
+                project: 'Community Growth',
+                details: '42 comments · 2 creator reposts',
+                metric: '4.2%',
+                metricLabel: 'Engagement rate',
+                priority: 'Priority 04'
+            },
+            {
+                name: 'MIA',
+                role: 'Partnerships',
+                project: 'Korea Retail Outreach',
+                details: '5 contacts · 2 meetings booked',
+                metric: '2 / 5',
+                metricLabel: 'Qualified meetings',
+                priority: 'Priority 05'
+            }
+        ];
+
+        // Action needed data
+        const actionData = [
+            { team: 'MARKETING', count: 4, urgent: true },
+            { team: 'INVENTORY', count: 2, urgent: false },
+            { team: 'CONTENT', count: 1, urgent: false }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+            renderTeamUpdates();
+            renderActionCards();
+        });
+
+        function updateCurrentDate() {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('en-US', options);
+            document.getElementById('currentDate').textContent = today;
+        }
+
+        function renderTeamUpdates() {
+            const container = document.getElementById('updateRows');
+            container.innerHTML = teamData.map(team => `
+                <div class="update-row">
+                    <div>
+                        <div class="update-name">${team.name}</div>
+                        <div class="update-role">${team.role}</div>
+                    </div>
+                    <div class="update-project-section">
+                        <div class="update-project">${team.project}</div>
+                        <div class="update-details">${team.details}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="update-metric">${team.metric}</div>
+                        <div class="update-metric-label">${team.metricLabel}</div>
+                    </div>
+                    <div class="update-priority">
+                        <select class="priority-dropdown">
+                            <option>${team.priority}</option>
+                            <option>Priority 01</option>
+                            <option>Priority 02</option>
+                            <option>Priority 03</option>
+                            <option>Priority 04</option>
+                            <option>Priority 05</option>
+                        </select>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderActionCards() {
+            const container = document.getElementById('actionCards');
+            container.innerHTML = actionData.map(action => `
+                <div class="action-card ${action.urgent ? 'urgent' : ''}">
+                    <div class="action-label">Team</div>
+                    <div class="action-team">
+                        ${action.team}
+                        ${action.urgent ? '<span class="action-warning">△</span>' : ''}
+                    </div>
+                    <div class="action-count">${action.count}</div>
+                </div>
+            `).join('');
+        }
+
+        function switchTab(event, tabName) {
+            // Remove active from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Add active to clicked tab
+            event.target.classList.add('active');
+
+            // Tab switching logic (can be expanded for team-specific data)
+            console.log('Switched to:', tabName);
+        }
+
+        // Function to load real-time data from Airtable (placeholder)
+        async function loadAirtableData() {
+            if (AIRTABLE_API_KEY === 'YOUR_API_KEY_HERE') {
+                console.log('Airtable API key not configured. Using sample data.');
+                return;
+            }
+
+            try {
+                // This would be implemented once Airtable integration is ready
+                console.log('Loading from Airtable...');
+            } catch (error) {
+                console.error('Error loading Airtable data:', error);
+            }
+        }
+    </script>
+</body>
+</html>
