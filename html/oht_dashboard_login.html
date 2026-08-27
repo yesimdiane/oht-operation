@@ -561,9 +561,12 @@
                 <div class="demo-section">
                     <label class="demo-label" for="demoEmployeeSelect">Employee Demo</label>
                     <select id="demoEmployeeSelect" class="demo-select">
-                        <option value="diane">Diane — Influencer Lead</option>
-                        <option value="naomi">Naomi — Content Manager</option>
-                        <option value="andy">Andy — Operations</option>
+                        <option value="marketing">Diane — Marketing</option>
+                        <option value="content">Naomi — Content</option>
+                        <option value="shipping">Shipping Test — Shipping</option>
+                        <option value="inventory">Inventory Test — Inventory</option>
+                        <option value="operations">Andy — Operations</option>
+                        <option value="koreaops">Korea Ops Test — Korea Ops</option>
                     </select>
                     <button class="demo-btn" onclick="loginAsEmployee()">
                         Demo Access (Employee View)
@@ -748,11 +751,18 @@
             }
         };
 
-        // Demo employees available from the login screen dropdown
+        // Demo employees available from the login screen dropdown —
+        // one per department/team, shaped to match the oht_user schema
+        // ({ email, name, title, department, team }) used by the department
+        // dashboards (marketing_communicating.html etc.), so a login here can
+        // carry over to those pages later without changing their access logic.
         const DEMO_EMPLOYEES = {
-            diane: { email: 'diane@ohtnyc.com', name: 'Diane', role: 'Influencer Lead' },
-            naomi: { email: 'naomi@ohtnyc.com', name: 'Naomi', role: 'Content Manager' },
-            andy:  { email: 'andy@ohtnyc.com',  name: 'Andy',  role: 'Operations' }
+            marketing:  { email: 'diane@ohtnyc.com',            name: 'Diane',            role: 'Marketing & Operations Coordinator', team: 'MARKETING' },
+            content:    { email: 'naomi@ohtnyc.com',             name: 'Naomi',            role: 'Content Manager',                    team: 'CONTENT' },
+            shipping:   { email: 'shipping.test@ohtnyc.com',     name: 'Shipping Test',    role: 'Shipping Coordinator',               team: 'SHIPPING' },
+            inventory:  { email: 'inventory.test@ohtnyc.com',    name: 'Inventory Test',   role: 'Inventory Coordinator',              team: 'INVENTORY' },
+            operations: { email: 'andy@ohtnyc.com',              name: 'Andy',             role: 'Operations',                         team: 'OPERATIONS' },
+            koreaops:   { email: 'koreaops.test@ohtnyc.com',     name: 'Korea Ops Test',   role: 'Korea Ops Coordinator',               team: 'KOREA OPS' }
         };
 
         // Initialize
@@ -796,6 +806,9 @@
                 email: emp.email,
                 name: emp.name,
                 role: emp.role,
+                title: 'EMPLOYEE',
+                department: emp.team,
+                team: emp.team,
                 picture: 'https://via.placeholder.com/36',
                 timestamp: new Date().getTime()
             };
