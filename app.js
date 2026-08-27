@@ -1,5 +1,6 @@
 const API_URL = "https://oht-internal-ops-api.yesimdiane.workers.dev";
 
+function qa(sel){ return [...document.querySelectorAll(sel)]; }
 const q = (s) => document.querySelector(s);
 const qa = (s) => [...document.querySelectorAll(s)];
 
