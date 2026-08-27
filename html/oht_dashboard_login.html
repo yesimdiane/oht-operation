@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OHT Daily Dashboard - Login</title>
+    <title>OHT Operations — Login</title>
+
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <style>
         * {
             margin: 0;
@@ -13,60 +15,89 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                "Helvetica Neue",
+                sans-serif;
+
             background: #ffffff;
+            color: #000000;
         }
 
-        /* Login Screen */
         .login-container {
+            min-height: 100vh;
+
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+
             padding: 20px;
-            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f5f5f5 0%,
+                    #ffffff 100%
+                );
         }
 
         .login-card {
+            width: 100%;
+            max-width: 420px;
+
             background: #ffffff;
+
             border: 1px solid #e0e0e0;
             border-radius: 8px;
-            padding: 60px 40px;
-            max-width: 420px;
-            width: 100%;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+
+            padding: 56px 40px;
+
+            box-shadow:
+                0 2px 16px rgba(0, 0, 0, 0.08);
         }
 
         .login-logo {
             font-size: 12px;
             font-weight: 700;
+
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: #999;
-            margin-bottom: 24px;
+
+            color: #999999;
+
             text-align: center;
+
+            margin-bottom: 24px;
         }
 
         .login-title {
             font-size: 32px;
             font-weight: 600;
-            color: #000;
-            margin-bottom: 8px;
+
             text-align: center;
+
+            margin-bottom: 8px;
         }
 
         .login-subtitle {
             font-size: 13px;
-            color: #999;
-            text-align: center;
-            margin-bottom: 40px;
+
             line-height: 1.6;
+
+            text-align: center;
+
+            color: #999999;
+
+            margin-bottom: 36px;
         }
 
         .login-content {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+
+            gap: 14px;
         }
 
         .google-signin {
@@ -77,826 +108,278 @@
         .login-divider {
             display: flex;
             align-items: center;
+
             gap: 12px;
-            margin: 20px 0;
+
+            margin: 6px 0;
         }
 
         .login-divider-line {
             flex: 1;
+
             height: 1px;
+
             background: #e0e0e0;
         }
 
         .login-divider-text {
-            font-size: 11px;
-            color: #999;
-            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 700;
+
             letter-spacing: 1px;
-        }
+            text-transform: uppercase;
 
-        .demo-btn {
-            padding: 12px 16px;
-            border: 1px solid #d0d0d0;
-            background: #ffffff;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .demo-btn:hover {
-            background: #fafafa;
-            border-color: #000;
+            color: #aaaaaa;
         }
 
         .demo-section {
             display: flex;
             flex-direction: column;
+
             gap: 8px;
         }
 
         .demo-label {
             font-size: 10px;
             font-weight: 700;
+
             letter-spacing: 1px;
             text-transform: uppercase;
-            color: #999;
+
+            color: #999999;
         }
 
         .demo-select {
-            padding: 10px 12px;
+            width: 100%;
+
+            padding: 12px;
+
             border: 1px solid #d0d0d0;
             border-radius: 4px;
-            font-size: 13px;
+
+            background: #ffffff;
+
             font-family: inherit;
-            color: #000;
-            background: #ffffff;
+            font-size: 13px;
+
             cursor: pointer;
         }
 
-        .demo-select:hover,
         .demo-select:focus {
-            border-color: #000;
+            outline: none;
+            border-color: #000000;
         }
 
-        /* Dashboard */
-        .dashboard-container {
-            display: none;
-            min-height: 100vh;
-            background: #f5f5f5;
-        }
+        .demo-btn {
+            width: 100%;
 
-        .dashboard-container.active {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header */
-        .dashboard-header {
-            background: #ffffff;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 24px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .header-logo {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #999;
-        }
-
-        .header-user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .user-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #000;
-        }
-
-        .user-email {
-            font-size: 11px;
-            color: #999;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .view-btn {
-            padding: 8px 16px;
-            border: 1px solid #d0d0d0;
-            background: #ffffff;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .view-btn:hover {
-            background: #fafafa;
-            border-color: #000;
-        }
-
-        .view-btn.active {
-            background: #000;
-            color: #fff;
-            border-color: #000;
-        }
-
-        .logout-btn {
-            padding: 8px 16px;
-            border: 1px solid #d0d0d0;
-            background: #ffffff;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .logout-btn:hover {
-            background: #fafafa;
-            border-color: #000;
-        }
-
-        /* Content */
-        .dashboard-content {
-            flex: 1;
-            padding: 40px 20px;
-            overflow-y: auto;
-        }
-
-        .content-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* View Sections */
-        .view-section {
-            display: none;
-        }
-
-        .view-section.active {
-            display: block;
-        }
-
-        /* Employee View Styles */
-        .header {
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: #999;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .title {
-            font-size: 40px;
-            font-weight: 600;
-            color: #000;
-            margin-bottom: 4px;
-        }
-
-        .subtitle {
-            font-size: 13px;
-            color: #999;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 40px;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 0;
-        }
-
-        .tab {
             padding: 12px 16px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            background: #ffffff;
+
             border: 1px solid #d0d0d0;
-            border-bottom: none;
-            border-radius: 4px 4px 0 0;
+            border-radius: 4px;
+
+            background: #ffffff;
+
+            font-size: 13px;
+            font-weight: 600;
+
             cursor: pointer;
-            transition: all 0.2s;
-            color: #999;
+
+            transition: 0.2s;
         }
 
-        .tab:hover {
-            color: #000;
+        .demo-btn:hover {
+            border-color: #000000;
             background: #fafafa;
         }
 
-        .tab.active {
-            background: #000;
-            color: #fff;
-            border-color: #000;
+        .demo-btn.primary {
+            background: #000000;
+            border-color: #000000;
+
+            color: #ffffff;
         }
 
-        /* Section */
-        .section {
-            margin-bottom: 48px;
+        .demo-btn.primary:hover {
+            background: #222222;
         }
 
-        .section-title {
+        .login-note {
+            margin-top: 22px;
+
             font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #999;
-            margin-bottom: 20px;
-        }
+            line-height: 1.5;
 
-        /* Update Rows */
-        .update-rows {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
+            color: #aaaaaa;
 
-        .update-row {
-            display: grid;
-            grid-template-columns: 120px 1fr 200px 80px;
-            gap: 24px;
-            align-items: center;
-            padding: 24px;
-            border-bottom: 1px solid #e0e0e0;
-            transition: background 0.2s;
-        }
-
-        .update-row:last-child {
-            border-bottom: none;
-        }
-
-        .update-row:hover {
-            background: #fafafa;
-        }
-
-        .update-name {
-            font-weight: 600;
-            color: #000;
-            font-size: 13px;
-        }
-
-        .update-role {
-            font-size: 11px;
-            color: #999;
-        }
-
-        .update-project-section {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .update-project {
-            font-weight: 600;
-            color: #000;
-            font-size: 13px;
-        }
-
-        .update-details {
-            font-size: 11px;
-            color: #999;
-        }
-
-        .update-metric {
-            text-align: right;
-            font-size: 20px;
-            font-weight: 700;
-            color: #000;
-        }
-
-        .update-metric-label {
-            font-size: 9px;
-            color: #999;
-        }
-
-        .update-priority {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .priority-dropdown {
-            padding: 6px 10px;
-            font-size: 11px;
-            border: 1px solid #d0d0d0;
-            border-radius: 4px;
-            background: #ffffff;
-            cursor: pointer;
-        }
-
-        .priority-dropdown:hover {
-            border-color: #000;
-        }
-
-        /* CEO View Styles */
-        .action-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .action-card {
-            background: #ffffff;
-            border: 1px solid #d0d0d0;
-            border-radius: 4px;
-            padding: 20px;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
         }
 
-        .action-card:hover {
-            border-color: #000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .action-card.urgent {
-            border: 2px solid #000;
-            background: #fafafa;
-        }
-
-        .action-label {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #999;
-            margin-bottom: 8px;
-        }
-
-        .action-team {
-            font-size: 18px;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 12px;
-        }
-
-        .action-count {
-            font-size: 28px;
-            font-weight: 700;
-            color: #000;
-        }
-
-        .action-warning {
-            display: inline-block;
-            font-size: 16px;
-            margin-left: 6px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
             .login-card {
                 padding: 40px 24px;
             }
 
-            .dashboard-header {
-                flex-direction: column;
-                gap: 16px;
-                padding: 20px;
-            }
-
-            .header-actions {
-                width: 100%;
-            }
-
-            .view-btn {
-                flex: 1;
-            }
-
-            .update-row {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .update-metric {
-                text-align: left;
-            }
-
-            .title {
+            .login-title {
                 font-size: 28px;
-            }
-
-            .action-cards {
-                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
+
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-container">
-        <div class="login-card">
-            <div class="login-logo">OHT / Daily</div>
-            <h1 class="login-title">Dashboard</h1>
-            <p class="login-subtitle">Sign in to access your daily operations dashboard</p>
-            
+
+    <main class="login-container">
+
+        <section class="login-card">
+
+            <div class="login-logo">
+                OHT / INTERNAL OPS
+            </div>
+
+            <h1 class="login-title">
+                Dashboard
+            </h1>
+
+            <p class="login-subtitle">
+                Sign in to access your OHT operations dashboard.
+            </p>
+
+
             <div class="login-content">
+
+                <!-- GOOGLE LOGIN -->
+
                 <div class="google-signin">
-                    <div id="g_id_onload"
-                         data-client_id="337829766336-097j7o7h2nahieg07vc8ib1hppanr46m.apps.googleusercontent.com"
-                         data-callback="handleCredentialResponse">
+
+                    <div
+                        id="g_id_onload"
+                        data-client_id="337829766336-097j7o7h2nahieg07vc8ib1hppanr46m.apps.googleusercontent.com"
+                        data-callback="handleCredentialResponse"
+                        data-auto_prompt="false">
                     </div>
-                    <div class="g_id_signin" data-type="standard"></div>
+
+                    <div
+                        class="g_id_signin"
+                        data-type="standard"
+                        data-shape="rectangular"
+                        data-theme="outline"
+                        data-text="signin_with"
+                        data-size="large"
+                        data-logo_alignment="left">
+                    </div>
+
                 </div>
+
 
                 <div class="login-divider">
                     <div class="login-divider-line"></div>
-                    <div class="login-divider-text">or</div>
+
+                    <div class="login-divider-text">
+                        Demo
+                    </div>
+
                     <div class="login-divider-line"></div>
                 </div>
 
+
+                <!-- EMPLOYEE DEMO -->
+
                 <div class="demo-section">
-                    <label class="demo-label" for="demoEmployeeSelect">Employee Demo</label>
-                    <select id="demoEmployeeSelect" class="demo-select">
-                        <option value="marketing">Diane — Marketing</option>
-                        <option value="content">Naomi — Content</option>
-                        <option value="shipping">Shipping Test — Shipping</option>
-                        <option value="inventory">Inventory Test — Inventory</option>
-                        <option value="operations">Andy — Operations</option>
-                        <option value="koreaops">Korea Ops Test — Korea Ops</option>
+
+                    <label
+                        class="demo-label"
+                        for="demoDepartment">
+
+                        Department Employee
+
+                    </label>
+
+
+                    <select
+                        id="demoDepartment"
+                        class="demo-select">
+
+                        <option value="">
+                            Select Department
+                        </option>
+
+                        <option value="MARKETING">
+                            Marketing
+                        </option>
+
+                        <option value="CONTENT">
+                            Content
+                        </option>
+
+                        <option value="SHIPPING">
+                            Shipping
+                        </option>
+
+                        <option value="INVENTORY">
+                            Inventory
+                        </option>
+
+                        <option value="OPERATIONS">
+                            Operations
+                        </option>
+
+                        <option value="KOREA OPS">
+                            Korea Ops
+                        </option>
+
+                        <option value="EXECUTIVE">
+                            Executive
+                        </option>
+
                     </select>
-                    <button class="demo-btn" onclick="loginAsEmployee()">
-                        Demo Access (Employee View)
+
+
+                    <button
+                        type="button"
+                        class="demo-btn"
+                        onclick="loginAsDepartmentDemo()">
+
+                        Demo Employee View →
+
                     </button>
+
                 </div>
 
-                <button class="demo-btn" onclick="loginAsDemo()">
-                    Demo Access (CEO View)
+
+                <!-- CEO DEMO -->
+
+                <button
+                    type="button"
+                    class="demo-btn primary"
+                    onclick="loginAsDemoCEO()">
+
+                    Demo CEO View →
+
                 </button>
+
             </div>
-        </div>
-    </div>
 
-    <!-- Dashboard Screen -->
-    <div id="dashboardScreen" class="dashboard-container">
-        <!-- Header -->
-        <div class="dashboard-header">
-            <div class="header-left">
-                <div class="header-logo">OHT / Daily</div>
-                <div class="header-user">
-                    <div class="user-avatar" id="userAvatar">D</div>
-                    <div class="user-info">
-                        <div class="user-name" id="userName">User</div>
-                        <div class="user-email" id="userEmail">user@example.com</div>
-                    </div>
-                </div>
+
+            <div class="login-note">
+
+                Access is determined by your registered email,
+                title, department and team.
+
             </div>
-            <div class="header-actions">
-                <button class="view-btn active" id="employeeViewBtn" onclick="switchView('employee')">
-                    Employee View
-                </button>
-                <button class="view-btn" id="ceoViewBtn" onclick="switchView('ceo')">
-                    CEO View
-                </button>
-                <button class="logout-btn" onclick="logout()">
-                    Logout
-                </button>
-            </div>
-        </div>
 
-        <!-- Content -->
-        <div class="dashboard-content">
-            <div class="content-wrapper">
-                <!-- Employee View -->
-                <div id="employeeView" class="view-section active">
-                    <div class="header">
-                        <div class="logo">OHT / Daily</div>
-                        <h1 class="title">Main Dashboard</h1>
-                        <p class="subtitle">Employee morning check · <span id="currentDate">August 26, 2026</span></p>
-                    </div>
+        </section>
 
-                    <div class="tabs">
-                        <div class="tab active" onclick="switchTab(event, 'marketing')">Marketing</div>
-                        <div class="tab" onclick="switchTab(event, 'shipping')">Shipping</div>
-                        <div class="tab" onclick="switchTab(event, 'inventory')">Inventory</div>
-                        <div class="tab" onclick="switchTab(event, 'content')">Content</div>
-                    </div>
+    </main>
 
-                    <div class="section">
-                        <div class="section-title">Yesterday's OHT Update</div>
-                        <div class="update-rows" id="updateRows">
-                            <div class="update-row">
-                                <div>
-                                    <div class="update-name">DIANE</div>
-                                    <div class="update-role">Influencer Lead</div>
-                                </div>
-                                <div class="update-project-section">
-                                    <div class="update-project">Influencer Partnership Expansion</div>
-                                    <div class="update-details">12 outreach · 6 follow-ups · 2 confirmed</div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <div class="update-metric">7 / 10</div>
-                                    <div class="update-metric-label">Confirmed collaborations</div>
-                                </div>
-                                <div class="update-priority">
-                                    <select class="priority-dropdown">
-                                        <option>Priority 01</option>
-                                        <option>Priority 02</option>
-                                        <option>Priority 03</option>
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="update-row">
-                                <div>
-                                    <div class="update-name">NAOMI</div>
-                                    <div class="update-role">Content Manager</div>
-                                </div>
-                                <div class="update-project-section">
-                                    <div class="update-project">Short-form Content Growth</div>
-                                    <div class="update-details">3 concepts · 2 drafts · 1 posted</div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <div class="update-metric">8 / 12</div>
-                                    <div class="update-metric-label">Weekly posts</div>
-                                </div>
-                                <div class="update-priority">
-                                    <select class="priority-dropdown">
-                                        <option>Priority 02</option>
-                                        <option>Priority 01</option>
-                                        <option>Priority 03</option>
-                                    </select>
-                                </div>
-                            </div>
+    <!--
+        IMPORTANT:
+        login HTML is inside /html/
+        app.js is in repository root
+    -->
 
-                            <div class="update-row">
-                                <div>
-                                    <div class="update-name">ANDY</div>
-                                    <div class="update-role">Operations</div>
-                                </div>
-                                <div class="update-project-section">
-                                    <div class="update-project">Customer Resolution SLA</div>
-                                    <div class="update-details">18 cases closed · 3 pending</div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <div class="update-metric">91%</div>
-                                    <div class="update-metric-label">24h response rate</div>
-                                </div>
-                                <div class="update-priority">
-                                    <select class="priority-dropdown">
-                                        <option>Priority 03</option>
-                                        <option>Priority 01</option>
-                                        <option>Priority 02</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <script src="../app.js"></script>
 
-                <!-- CEO View -->
-                <div id="ceoView" class="view-section">
-                    <div class="header">
-                        <div class="logo">OHT / Daily</div>
-                        <h1 class="title">CEO Dashboard</h1>
-                        <p class="subtitle">Executive decision board · <span id="ceoCurrentDate">August 26, 2026</span></p>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-title">Action Needed</div>
-                        <div class="action-cards" id="actionCards">
-                            <div class="action-card urgent">
-                                <div class="action-label">Team</div>
-                                <div class="action-team">
-                                    MARKETING
-                                    <span class="action-warning">△</span>
-                                </div>
-                                <div class="action-count">4</div>
-                            </div>
-
-                            <div class="action-card">
-                                <div class="action-label">Team</div>
-                                <div class="action-team">INVENTORY</div>
-                                <div class="action-count">2</div>
-                            </div>
-
-                            <div class="action-card">
-                                <div class="action-label">Team</div>
-                                <div class="action-team">CONTENT</div>
-                                <div class="action-count">1</div>
-                            </div>
-
-                            <div class="action-card">
-                                <div class="action-label">Team</div>
-                                <div class="action-team">SHIPPING</div>
-                                <div class="action-count">1</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Config
-        const APP_CONFIG = {
-            app: "OHT Daily Dashboard",
-            version: "1.0.0",
-            oauth: {
-                google_client_id: "337829766336-097j7o7h2nahieg07vc8ib1hppanr46m.apps.googleusercontent.com"
-            }
-        };
-
-        // Demo employees available from the login screen dropdown —
-        // one per department/team, shaped to match the oht_user schema
-        // ({ email, name, title, department, team }) used by the department
-        // dashboards (marketing_communicating.html etc.), so a login here can
-        // carry over to those pages later without changing their access logic.
-        const DEMO_EMPLOYEES = {
-            marketing:  { email: 'diane@ohtnyc.com',            name: 'Diane',            role: 'Marketing & Operations Coordinator', team: 'MARKETING' },
-            content:    { email: 'naomi@ohtnyc.com',             name: 'Naomi',            role: 'Content Manager',                    team: 'CONTENT' },
-            shipping:   { email: 'shipping.test@ohtnyc.com',     name: 'Shipping Test',    role: 'Shipping Coordinator',               team: 'SHIPPING' },
-            inventory:  { email: 'inventory.test@ohtnyc.com',    name: 'Inventory Test',   role: 'Inventory Coordinator',              team: 'INVENTORY' },
-            operations: { email: 'andy@ohtnyc.com',              name: 'Andy',             role: 'Operations',                         team: 'OPERATIONS' },
-            koreaops:   { email: 'koreaops.test@ohtnyc.com',     name: 'Korea Ops Test',   role: 'Korea Ops Coordinator',               team: 'KOREA OPS' }
-        };
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateCurrentDate();
-            checkAuthStatus();
-        });
-
-        // Google Sign-In Callback
-        function handleCredentialResponse(response) {
-            // Decode JWT token
-            const base64Url = response.credential.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-
-            const userData = JSON.parse(jsonPayload);
-            loginUser(userData);
-        }
-
-        // Login with Google
-        function loginUser(userData) {
-            const userdata = {
-                email: userData.email,
-                name: userData.name,
-                picture: userData.picture,
-                timestamp: new Date().getTime()
-            };
-            
-            sessionStorage.setItem('oht_user', JSON.stringify(userdata));
-            showDashboard(userdata);
-        }
-
-        // Demo Login — Employee
-        function loginAsEmployee() {
-            const key = document.getElementById('demoEmployeeSelect').value;
-            const emp = DEMO_EMPLOYEES[key];
-
-            const userdata = {
-                email: emp.email,
-                name: emp.name,
-                role: emp.role,
-                title: 'EMPLOYEE',
-                department: emp.team,
-                team: emp.team,
-                picture: 'https://via.placeholder.com/36',
-                timestamp: new Date().getTime()
-            };
-
-            sessionStorage.setItem('oht_user', JSON.stringify(userdata));
-            showDashboard(userdata);
-            switchView('employee');
-        }
-
-        // Demo Login — CEO
-        function loginAsDemo() {
-            const demoUser = {
-                email: 'demo@ohtnyc.com',
-                name: 'Demo User',
-                picture: 'https://via.placeholder.com/36',
-                timestamp: new Date().getTime()
-            };
-            
-            sessionStorage.setItem('oht_user', JSON.stringify(demoUser));
-            showDashboard(demoUser);
-            switchView('ceo');
-        }
-
-        // Show Dashboard
-        function showDashboard(userData) {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('dashboardScreen').classList.add('active');
-            
-            // Set user info
-            document.getElementById('userName').textContent = userData.name;
-            document.getElementById('userEmail').textContent = userData.email;
-            document.getElementById('userAvatar').textContent = userData.name.charAt(0).toUpperCase();
-            
-            updateCurrentDate();
-        }
-
-        // Check Auth Status
-        function checkAuthStatus() {
-            const user = sessionStorage.getItem('oht_user');
-            if (user) {
-                showDashboard(JSON.parse(user));
-            }
-        }
-
-        // Logout
-        function logout() {
-            sessionStorage.removeItem('oht_user');
-            document.getElementById('dashboardScreen').classList.remove('active');
-            document.getElementById('loginScreen').style.display = 'flex';
-            
-            // Reset tabs
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelector('.tab').classList.add('active');
-        }
-
-        // Switch View
-        function switchView(view) {
-            document.querySelectorAll('.view-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.querySelectorAll('.view-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            if (view === 'employee') {
-                document.getElementById('employeeView').classList.add('active');
-                document.getElementById('employeeViewBtn').classList.add('active');
-            } else {
-                document.getElementById('ceoView').classList.add('active');
-                document.getElementById('ceoViewBtn').classList.add('active');
-            }
-        }
-
-        // Switch Tab
-        function switchTab(event, tabName) {
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-
-        // Update Current Date
-        function updateCurrentDate() {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            const today = new Date().toLocaleDateString('en-US', options);
-            document.getElementById('currentDate').textContent = today;
-            document.getElementById('ceoCurrentDate').textContent = today;
-        }
-    </script>
 </body>
 </html>
