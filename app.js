@@ -1125,4 +1125,3 @@ q("#submit-all-decisions")
       } catch (error) {
         alert(error.message);
       }
-    
