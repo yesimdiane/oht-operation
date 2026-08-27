@@ -558,6 +558,18 @@
                     <div class="login-divider-line"></div>
                 </div>
 
+                <div class="demo-section">
+                    <label class="demo-label" for="demoEmployeeSelect">Employee Demo</label>
+                    <select id="demoEmployeeSelect" class="demo-select">
+                        <option value="diane">Diane — Influencer Lead</option>
+                        <option value="naomi">Naomi — Content Manager</option>
+                        <option value="andy">Andy — Operations</option>
+                    </select>
+                    <button class="demo-btn" onclick="loginAsEmployee()">
+                        Demo Access (Employee View)
+                    </button>
+                </div>
+
                 <button class="demo-btn" onclick="loginAsDemo()">
                     Demo Access (CEO View)
                 </button>
@@ -736,6 +748,13 @@
             }
         };
 
+        // Demo employees available from the login screen dropdown
+        const DEMO_EMPLOYEES = {
+            diane: { email: 'diane@ohtnyc.com', name: 'Diane', role: 'Influencer Lead' },
+            naomi: { email: 'naomi@ohtnyc.com', name: 'Naomi', role: 'Content Manager' },
+            andy:  { email: 'andy@ohtnyc.com',  name: 'Andy',  role: 'Operations' }
+        };
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             updateCurrentDate();
@@ -768,7 +787,25 @@
             showDashboard(userdata);
         }
 
-        // Demo Login
+        // Demo Login — Employee
+        function loginAsEmployee() {
+            const key = document.getElementById('demoEmployeeSelect').value;
+            const emp = DEMO_EMPLOYEES[key];
+
+            const userdata = {
+                email: emp.email,
+                name: emp.name,
+                role: emp.role,
+                picture: 'https://via.placeholder.com/36',
+                timestamp: new Date().getTime()
+            };
+
+            sessionStorage.setItem('oht_user', JSON.stringify(userdata));
+            showDashboard(userdata);
+            switchView('employee');
+        }
+
+        // Demo Login — CEO
         function loginAsDemo() {
             const demoUser = {
                 email: 'demo@ohtnyc.com',
@@ -779,6 +816,7 @@
             
             sessionStorage.setItem('oht_user', JSON.stringify(demoUser));
             showDashboard(demoUser);
+            switchView('ceo');
         }
 
         // Show Dashboard
