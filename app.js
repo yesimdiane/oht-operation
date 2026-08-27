@@ -1535,113 +1535,112 @@ function loginAsDemoCEO() {
 // ======================================================
 
 function loginAsDepartmentDemo() {
+    const select = document.getElementById("demoDepartment");
+    const department = select ? select.value : "";
 
-  const dropdown =
-    document.getElementById(
-      "demoDepartment"
+    if (!department) {
+        alert("Please select a department.");
+        return;
+    }
+
+    const demoUsers = {
+        "MARKETING": {
+            email: "demo.marketing@ohtnyc.com",
+            name: "Demo Marketing",
+            title: "EMPLOYEE",
+            department: "MARKETING",
+            team: "MARKETING"
+        },
+
+        "CONTENT": {
+            email: "demo.content@ohtnyc.com",
+            name: "Demo Content",
+            title: "EMPLOYEE",
+            department: "CONTENT",
+            team: "CONTENT"
+        },
+
+        "SHIPPING": {
+            email: "demo.shipping@ohtnyc.com",
+            name: "Demo Shipping",
+            title: "EMPLOYEE",
+            department: "SHIPPING",
+            team: "SHIPPING"
+        },
+
+        "INVENTORY": {
+            email: "demo.inventory@ohtnyc.com",
+            name: "Demo Inventory",
+            title: "EMPLOYEE",
+            department: "INVENTORY",
+            team: "INVENTORY"
+        },
+
+        "OPERATIONS": {
+            email: "demo.operations@ohtnyc.com",
+            name: "Demo Operations",
+            title: "EMPLOYEE",
+            department: "OPERATIONS",
+            team: "OPERATIONS"
+        },
+
+        "KOREA OPS": {
+            email: "demo.koreaops@ohtnyc.com",
+            name: "Demo Korea Ops",
+            title: "EMPLOYEE",
+            department: "KOREA OPS",
+            team: "KOREA OPS"
+        },
+
+        "EXECUTIVE": {
+            email: "demo.executive@ohtnyc.com",
+            name: "Demo Executive",
+            title: "EXECUTIVE",
+            department: "EXECUTIVE",
+            team: "ALL"
+        }
+    };
+
+    const user = demoUsers[department];
+
+    sessionStorage.setItem(
+        "oht_user",
+        JSON.stringify(user)
     );
 
+    const routes = {
+        "MARKETING":
+            "dashboard/oht_dashboard_marketing.html",
 
-  if (!dropdown) {
+        "CONTENT":
+            "dashboard/oht_dashboard_content.html",
 
-    console.error(
-      "#demoDepartment not found"
-    );
+        "SHIPPING":
+            "dashboard/oht_dashboard_shipping.html",
 
+        "INVENTORY":
+            "dashboard/oht_dashboard_inventory.html",
 
-    return;
+        "OPERATIONS":
+            "dashboard/oht_dashboard_operations.html",
 
-  }
+        "KOREA OPS":
+            "oht_dashboard_korea_ops.html",
 
+        "EXECUTIVE":
+            "oht_dashboard_executive.html"
+    };
 
-  const selected =
-    normalize(
-      dropdown.value
-    );
+    const destination = routes[department];
 
+    if (!destination) {
+        window.location.href =
+            "oht_welcome_unregistered.html";
+        return;
+    }
 
-  if (!selected) {
-
-    alert(
-      "Please select a department."
-    );
-
-
-    return;
-
-  }
-
-
-  // EXECUTIVE DEMO
-
-  if (
-    selected ===
-    "EXECUTIVE"
-  ) {
-
-    const user =
-      saveCurrentUser({
-
-        email:
-          "executive-demo@ohtnyc.com",
-
-        name:
-          "Executive Demo",
-
-        title:
-          "DIRECTOR",
-
-        department:
-          "EXECUTIVE",
-
-        team:
-          "ALL"
-
-      });
-
-
-    routeUser(
-      user
-    );
-
-
-    return;
-
-  }
-
-
-  const allowed = [
-
-    "MARKETING",
-
-    "CONTENT",
-
-    "SHIPPING",
-
-    "INVENTORY",
-
-    "OPERATIONS",
-
-    "KOREA OPS"
-
-  ];
-
-
-  if (
-    !allowed.includes(
-      selected
-    )
-  ) {
-
-    goTo(
-      "NO_ACCESS"
-    );
-
-
-    return;
-
-  }
-
+    window.location.href = destination;
+}
 
   const user =
     saveCurrentUser({
