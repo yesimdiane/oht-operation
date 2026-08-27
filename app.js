@@ -152,8 +152,70 @@ q("#submit-project")?.addEventListener(
   "click",
   submitProject
 );
+// ADD ACTION
+const addActionButton = document.querySelector("[data-add-action]");
 
+if (addActionButton) {
+  addActionButton.addEventListener("click", () => {
+    const container = document.querySelector("[data-action-list]");
+    const firstRow = container?.querySelector("[data-action-row]");
 
+    if (!container || !firstRow) {
+      console.error("Action list or action row not found");
+      return;
+    }
+
+    const newRow = firstRow.cloneNode(true);
+
+    newRow.querySelectorAll("input").forEach(input => {
+      input.value = "";
+    });
+
+    container.appendChild(newRow);
+  });
+}
+// ADD / REMOVE ACTION
+
+const addActionButton = document.querySelector("[data-add-action]");
+
+if (addActionButton) {
+  addActionButton.addEventListener("click", () => {
+    const container = document.querySelector("[data-action-list]");
+    const firstRow = container?.querySelector("[data-action-row]");
+
+    if (!container || !firstRow) return;
+
+    const newRow = firstRow.cloneNode(true);
+
+    newRow.querySelectorAll("input").forEach((input) => {
+      input.value = "";
+    });
+
+    container.appendChild(newRow);
+  });
+}
+
+document.addEventListener("click", (event) => {
+  const removeButton = event.target.closest("[data-remove-action]");
+
+  if (!removeButton) return;
+
+  const row = removeButton.closest("[data-action-row]");
+  const container = document.querySelector("[data-action-list]");
+
+  if (!row || !container) return;
+
+  const rows = container.querySelectorAll("[data-action-row]");
+
+  if (rows.length <= 1) {
+    row.querySelectorAll("input").forEach((input) => {
+      input.value = "";
+    });
+    return;
+  }
+
+  row.remove();
+});
 // ======================================================
 // CEO PROJECT REVIEW
 // ======================================================
