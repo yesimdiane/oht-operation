@@ -1,31 +1,20 @@
-// ======================================================
-// OHT OPERATIONS — app.js
-// MVP FRONTEND AUTH / RBAC / ROUTING
-//
-// app.js location:
-// /app.js
-//
-// Current dashboard structure:
-//
-// /html/Dashboard/
-//   oht_dashboard_ceo.html
-//   oht_welcome_unregistered.html
-//
-// /html/Dashboard/department_communication/
-//   marketing_communicating.html
-//   content_communicating.html
-//   shipping_communicating.html
-//   inventory_communicating.html
-//   operations_communicating.html
-//
-// /html/
-//   oht_dashboard_login.html
-//   access-management.html
-//   daily-update.html
-//   project.html
-//   ...
-// ======================================================
+const ROUTES = {
+  LOGIN: "html/oht_dashboard_login.html",
 
+  MARKETING: "html/dashboard/oht_dashboard_marketing.html",
+  CONTENT: "html/dashboard/oht_dashboard_content.html",
+  SHIPPING: "html/dashboard/oht_dashboard_shipping.html",
+  INVENTORY: "html/dashboard/oht_dashboard_inventory.html",
+  OPERATIONS: "html/dashboard/oht_dashboard_operations.html",
+
+  WELCOME: "html/oht_welcome_unregistered.html",
+
+  ADMIN: "html/oht_dashboard_admin.html",
+  EXECUTIVE: "html/oht_dashboard_executive.html",
+  CEO: "html/oht_dashboard_ceo.html",
+
+  NO_ACCESS: "html/oht_no_access.html"
+};
 
 // ======================================================
 // CONFIG
@@ -1968,4 +1957,3 @@ window.requireExecutiveAccess =
 
 window.requireAdminAccess =
   requireAdminAccess;
-  
