@@ -1,3 +1,18 @@
+function loginUser(userData) {
+    const userdata = {
+        email: userData.email,
+        name: userData.name,
+        picture: userData.picture,
+        timestamp: new Date().getTime()
+    };
+
+    sessionStorage.setItem("oht_user", JSON.stringify(userdata));
+
+    localStorage.setItem("ohtUserName", userData.name || "");
+    localStorage.setItem("ohtUserEmail", userData.email || "");
+
+    showDashboard(userdata);
+}
 const API_URL = "https://oht-internal-ops-api.yesimdiane.workers.dev";
 
 function qa(sel){ return [...document.querySelectorAll(sel)]; }
