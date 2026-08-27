@@ -4,6 +4,11 @@ function qa(sel){ return [...document.querySelectorAll(sel)]; }
 const q = (s) => document.querySelector(s);
 const qa = (s) => [...document.querySelectorAll(s)];
 
+}
+
+// ======================================================
+// submitProject()
+// ======================================================
 async function api(path, options = {}) {
   const response = await fetch(API_URL + path, {
     headers: {
@@ -41,12 +46,6 @@ function parseDate(value) {
   }
 
   return date.toISOString().slice(0, 10);
-}
-
-
-// ======================================================
-// TABS
-// ======================================================
 
 qa("[data-tab]").forEach((button) => {
   button.addEventListener("click", () => {
@@ -60,10 +59,9 @@ qa("[data-tab]").forEach((button) => {
 
 
 // ======================================================
-// SUBMIT PROJECT
+// set the goal
 // ======================================================
 
-async function submitProject() {
   const taskRows = qa(".action-item");
 
   const tasks = taskRows
@@ -95,21 +93,21 @@ async function submitProject() {
     goal: q("#project-goal")?.value.trim(),
 
     metricName: q("#project-metric")?.value.trim(),
-
-    currentNumber: numberFrom(
-      q("#project-current")?.value
-    ),
-
-    targetNumber: numberFrom(
-      q("#project-target")?.value
-    ),
-
-    unit: "%",
+    value: Number(
+      q("#project-value")?.value || 0
+     ),
+      target: q("#project-target")?.value.trim() || "",
 
     targetDate: "2026-09-01",
-
-    tasks,
   };
+  
+taskRows
+const tasks = [...document.querySelectorAll(".action-item")].map(row => ({
+  action: row.querySelector(".action-name")?.value || "",
+  goal: row.querySelector(".action-goal")?.value || "",
+  dueDate: row.querySelector(".action-date")?.value || ""
+}));
+
 
   const button = q("#submit-project");
 
@@ -148,42 +146,21 @@ async function submitProject() {
   }
 }
 
-q("#submit-project")?.addEventListener(
-  "click",
-  submitProject
-);
-// ADD ACTION
-const addActionButton = document.querySelector("[data-add-action]");
+// EXECUTION PLAN — ADD / REMOVE ACTION
+document.addEventListener("click", function (event) {
 
-if (addActionButton) {
-  addActionButton.addEventListener("click", () => {
-    const container = document.querySelector("[data-action-list]");
-    const firstRow = container?.querySelector("[data-action-row]");
+  const addButton = event.addEventListener{.closest("[data-add-action]");
 
-    if (!container || !firstRow) {
-      console.error("Action list or action row not found");
+  if (addButton) {
+    event.addEventListener(Date.now(), "click");
+
+    const list = document.querySelector(".action-list");
+    const firstRow = list?.querySelector(".action-item");
+
+    if (!list || !firstRow) {
+      console.error("action-list/action-item not found");
       return;
     }
-
-    const newRow = firstRow.cloneNode(true);
-
-    newRow.querySelectorAll("input").forEach(input => {
-      input.value = "";
-    });
-
-    container.appendChild(newRow);
-  });
-}
-// ADD / REMOVE ACTION
-
-const addActionButton = document.querySelector("[data-add-action]");
-
-if (addActionButton) {
-  addActionButton.addEventListener("click", () => {
-    const container = document.querySelector("[data-action-list]");
-    const firstRow = container?.querySelector("[data-action-row]");
-
-    if (!container || !firstRow) return;
 
     const newRow = firstRow.cloneNode(true);
 
@@ -191,31 +168,28 @@ if (addActionButton) {
       input.value = "";
     });
 
-    container.appendChild(newRow);
-  });
-}
-
-document.addEventListener("click", (event) => {
-  const removeButton = event.target.closest("[data-remove-action]");
-
-  if (!removeButton) return;
-
-  const row = removeButton.closest("[data-action-row]");
-  const container = document.querySelector("[data-action-list]");
-
-  if (!row || !container) return;
-
-  const rows = container.querySelectorAll("[data-action-row]");
-
-  if (rows.length <= 1) {
-    row.querySelectorAll("input").forEach((input) => {
-      input.value = "";
-    });
+    list.appendChild(newRow);
     return;
   }
 
-  row.remove();
+  const removeButton = event.target.closest("[data-remove-action]");
+
+  if (removeButton) {
+    event.preventDefault();
+
+    const row = removeButton.closest(".action-item");
+    const list = removeButton.closest(".action-list");
+
+    if (!row || !list) return;
+
+    const rows = list.querySelectorAll(".action-item");
+
+    if (rows.length > 1) {
+      row.remove();
+    }
+  }
 });
+// EXECUTION PLAN — ADD / REMOVE ACTION
 // ======================================================
 // CEO PROJECT REVIEW
 // ======================================================
@@ -229,7 +203,6 @@ async function reviewProject(decision) {
     return;
   }
 
-  const prioritySelect = q("#ceo-priority");
 
   const priority = prioritySelect
     ? Number(prioritySelect.value) ||
@@ -268,6 +241,12 @@ async function reviewProject(decision) {
     alert(error.message);
   }
 }
+
+
+q("#submit-project")?.addEventListener(
+  "click",
+  submitProject
+);
 
 q("#approve-project")?.addEventListener(
   "click",

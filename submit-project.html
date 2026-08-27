@@ -8,14 +8,147 @@
 <div class="form-row"><div><div class="label">02 WHY / PROBLEM</div><div class="form-help">Why does this need to happen?</div></div><div><textarea>Launch the Korean storefront with payments, compliant product registration, and final assets.</textarea></div></div>
 <div class="form-row"><div><div class="label">03 GOAL</div><div class="form-help">What outcome are you trying to achieve?</div></div><div><textarea>Launch the Korea site and make it ready to accept real customer orders.</textarea></div></div>
 <div class="form-row"><div><div class="label">04 WHAT ARE WE LOOKING AT?</div><div class="form-help">What number tells us this is working?</div></div><div><input value="Launch readiness %"></div></div>
-<div class="form-row"><div><div class="label">05 CURRENT → TARGET</div></div><div class="grid two"><input value="Current: 60%"><input value="Target: 100%"></div></div>
+<!-- 05 CURRENT → TARGET -->
+<div class="form-row">
+  <div>
+    <div class="label">05 CURRENT → TARGET</div>
+    <div class="form-help">
+      Current is a number. Target can include the goal and unit.
+    </div>
+  </div>
 
-<div class="form-row"><div><div class="label">06 EXECUTION PLAN</div><div class="form-help">Each action must include a work amount or goal number + due date.</div></div>
-<div class="action-list">
-<div class="action-item"><input value="Submit PG application"><input value="1 submission"><input value="Aug 28"><button class="btn">×</button></div>
-<div class="action-item"><input value="Replace product images"><input value="30 SKUs"><input value="Aug 29"><button class="btn">×</button></div>
-<div class="action-item"><input value="Run payment QA"><input value="5 test orders"><input value="Aug 30"><button class="btn">×</button></div>
-<button type="button" class="btn" style="margin-top:10px" data-add-action>
+  <div class="grid two">
+    <input
+      type="number"
+      id="project-value"
+      placeholder="Current number"
+      value="10"
+    >
+
+    <input
+      type="text"
+      id="project-target"
+      placeholder="Target — e.g. 0 tasks / 50 creators / 95%"
+      value="0 tasks"
+    >
+  </div>
+</div>
+
+
+<!-- 06 EXECUTION PLAN -->
+<div class="form-row">
+
+  <div>
+    <div class="label">06 EXECUTION PLAN</div>
+    <div class="form-help">
+      Each action must include a work amount or goal number + due date.
+    </div>
+  </div>
+
+  <div>
+
+    <div class="action-list" id="action-list">
+
+      <div class="action-item">
+        <input
+          type="text"
+          class="action-name"
+          placeholder="Action"
+          value="Submit PG application"
+        >
+
+        <input
+          type="text"
+          class="action-goal"
+          placeholder="Goal"
+          value="1 submission"
+        >
+
+        <input
+          type="date"
+          class="action-date"
+          value="2026-08-28"
+        >
+
+        <button
+          type="button"
+          class="btn"
+          data-remove-action
+        >×</button>
+      </div>
+
+
+      <div class="action-item">
+        <input
+          type="text"
+          class="action-name"
+          placeholder="Action"
+          value="Replace product images"
+        >
+
+        <input
+          type="text"
+          class="action-goal"
+          placeholder="Goal"
+          value="30 SKUs"
+        >
+
+        <input
+          type="date"
+          class="action-date"
+          value="2026-08-29"
+        >
+
+        <button
+          type="button"
+          class="btn"
+          data-remove-action
+        >×</button>
+      </div>
+
+
+      <div class="action-item">
+        <input
+          type="text"
+          class="action-name"
+          placeholder="Action"
+          value="Run payment QA"
+        >
+
+        <input
+          type="text"
+          class="action-goal"
+          placeholder="Goal"
+          value="5 test orders"
+        >
+
+        <input
+          type="date"
+          class="action-date"
+          value="2026-08-30"
+        >
+
+        <button
+          type="button"
+          class="btn"
+          data-remove-action
+        >×</button>
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="btn"
+      data-add-action
+      style="margin-top:10px; width:100%;"
+    >
+      + ADD ACTION
+    </button>
+
+  </div>
+</div><button type="button" class="btn" style="margin-top:10px" data-add-action>
   + ADD ACTION
 </button></div></div>
 

@@ -1,12 +1,178 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Daily Update</title><link rel="stylesheet" href="style.css"></head><body><div class="shell">
-<header class="header"><div><a class="eyebrow muted" href="project.html">← PROJECT</a><div class="brand" style="margin-top:18px">Daily Update</div></div><div class="eyebrow">DIANE · AUG 26</div></header>
-<main class="content">
-<div class="card soft"><div class="eyebrow muted">APPROVED PROJECT</div><div class="project" style="margin-top:8px">Korea Website Launch</div><div class="sub">Priority 01 · Target: 100% launch readiness</div></div>
 <div class="section">
-<div class="form-row"><div><div class="label">TODAY'S ACTIONS</div></div><div><textarea>Updated product registration list; prepared PG application fields.</textarea></div></div>
-<div class="form-row"><div><div class="label">TODAY'S RESULT</div></div><div><input value="+10% launch readiness"></div></div>
-<div class="form-row"><div><div class="label">BLOCKER</div></div><div><select><option>CEO DECISION / INPUT</option><option>ASSET</option><option>EXTERNAL PARTY</option><option>OTHER TEAM</option><option>NONE</option></select><textarea style="margin-top:10px">Waiting on CEO contact info + 통신판매업신고번호</textarea></div></div>
-<div class="form-row"><div><div class="label">NEXT ACTION</div></div><div><input value="Submit PG application once CEO input is received"></div></div>
+
+  <!-- 01 PROJECT -->
+  <div class="form-row">
+    <div>
+      <div class="label">01 PROJECT</div>
+      <div class="form-help">
+        Select the approved project you are working on today.
+      </div>
+    </div>
+
+    <div>
+      <select id="daily-project">
+        <option value="">Select project</option>
+      </select>
+    </div>
+  </div>
+
+
+  <!-- 02 TODAY'S RESULTS -->
+  <div class="form-row">
+    <div>
+      <div class="label">02 TODAY'S RESULTS</div>
+      <div class="form-help">
+        Select a task and enter only today's completed amount.
+      </div>
+    </div>
+
+    <div>
+
+      <div id="daily-result-list">
+
+        <div class="daily-result-row">
+          <select class="daily-task">
+            <option value="">Select task</option>
+          </select>
+
+          <input
+            type="number"
+            class="daily-result-number"
+            placeholder="Today's result"
+            min="0"
+          >
+
+          <button
+            type="button"
+            class="btn"
+            data-remove-daily-result
+          >
+            ×
+          </button>
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="btn full"
+        data-add-daily-result
+        style="margin-top:10px"
+      >
+        + ADD RESULT
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- 03 UPDATE -->
+  <div class="form-row">
+    <div>
+      <div class="label">03 UPDATE</div>
+      <div class="form-help">
+        Anything important happen today?
+      </div>
+    </div>
+
+    <div>
+      <textarea
+        id="daily-update-note"
+        placeholder="Anything important happen today?"
+      ></textarea>
+    </div>
+  </div>
+
+
+  <!-- 04 WAITING FOR -->
+  <div class="form-row">
+    <div>
+      <div class="label">04 WAITING FOR</div>
+      <div class="form-help">
+        Is your work waiting on another team or the CEO?
+      </div>
+    </div>
+
+    <div>
+
+      <select id="daily-waiting-for">
+        <option value="">NOBODY</option>
+        <option value="CEO">CEO</option>
+        <option value="MARKETING">MARKETING</option>
+        <option value="CONTENT">CONTENT</option>
+        <option value="OPERATIONS">OPERATIONS</option>
+        <option value="SHIPPING">SHIPPING</option>
+        <option value="INVENTORY">INVENTORY</option>
+        <option value="KOREA OPS">KOREA OPS</option>
+      </select>
+
+      <div
+        id="daily-waiting-details-wrap"
+        style="display:none; margin-top:10px"
+      >
+        <textarea
+          id="daily-waiting-details"
+          placeholder="What do you need?"
+        ></textarea>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- 05 SPECIAL REQUEST TO CEO -->
+  <div class="form-row">
+    <div>
+      <div class="label">05 SPECIAL REQUEST TO CEO?</div>
+      <div class="form-help">
+        Separate CEO approval, decision, information, budget, resource, or other request.
+      </div>
+    </div>
+
+    <div>
+
+      <select id="daily-ceo-request">
+        <option value="NO" selected>NO</option>
+        <option value="YES">YES</option>
+      </select>
+
+      <div
+        id="daily-ceo-request-details"
+        style="display:none; margin-top:10px"
+      >
+
+        <select id="daily-ceo-request-type">
+          <option value="">Select request type</option>
+          <option value="APPROVAL">APPROVAL</option>
+          <option value="DECISION">DECISION</option>
+          <option value="INFORMATION">INFORMATION</option>
+          <option value="BUDGET">BUDGET</option>
+          <option value="RESOURCE">RESOURCE</option>
+          <option value="OTHER">OTHER</option>
+        </select>
+
+        <textarea
+          id="daily-ceo-request-note"
+          style="margin-top:10px"
+          placeholder="What do you need from the CEO?"
+        ></textarea>
+
+      </div>
+
+    </div>
+  </div>
+
 </div>
-<a class="btn primary full" href="project.html">SUBMIT DAILY UPDATE →</a>
-</main><footer class="footer"><span>TEAM MEMBER UPDATE</span><span>ACTION · RESULT · BLOCKER · NEXT ACTION</span></footer></div></body></html>
+
+
+<button
+  type="button"
+  class="btn primary full"
+  id="submit-daily-report"
+>
+  SUBMIT DAILY REPORT →
+</button>
+
+<script src="app.js"></script>
+
+</body>
