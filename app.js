@@ -9,8 +9,7 @@ function loginUser(userData) {
     sessionStorage.setItem("oht_user", JSON.stringify(userdata));
 
     localStorage.setItem("ohtUserName", userData.name || "");
-    localStorage.setItem("ohtUserEmail", userData.email || "");
-
+localStorage.setItem("ohtUserEmail", userData.email || "");
     showDashboard(userdata);
 }
 const API_URL = "https://oht-internal-ops-api.yesimdiane.workers.dev";
