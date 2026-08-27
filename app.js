@@ -5,11 +5,424 @@ const q = (s) => document.querySelector(s);
 const qa = (s) => [...document.querySelectorAll(s)];
 
 }
+// ======================================================
+// DAILY REPORT
+// ======================================================
+
+let dailyProjectTasks = [];
+
+async function initDailyReport() {
+  const submitButton = q("#submit-daily-report");
+
+  // daily-update.html이 아니면 실행하지 않음
+  if (!submitButton) return;
+
+  const projectSelect = q("#daily-project");
+
+  try {
+    // --------------------------------------------------
+    // LOAD PROJECTS
+    // --------------------------------------------------
+    const projectData = await api("/api/projects");
+
+    const activeProjects = (projectData.records || []).filter((record) => {
+      const status = record.fields?.Status || "";
+
+      return [
+        "APPROVED",
+        "IN PROGRESS",
+        "BLOCKED",
+        "READY"
+      ].includes(status);
+    });
+
+    projectSelect.innerHTML =
+      `<option value="">Select project</option>` +
+      activeProjects
+        .map((record) => {
+          const name = record.fields["Project Name"] || "";
+
+          return `
+            <option value="${escapeHtml(name)}">
+              ${escapeHtml(name)}
+            </option>
+          `;
+        })
+        .join("");
+
+  } catch (error) {
+    console.error("Could not load projects:", error);
+
+    projectSelect.innerHTML =
+      `<option value="">Could not load projects</option>`;
+  }
+
+
+  // --------------------------------------------------
+  // PROJECT CHANGE → LOAD TASKS
+  // --------------------------------------------------
+  projectSelect.addEventListener("change", async function () {
+    const projectName = this.value;
+
+    dailyProjectTasks = [];
+
+    clearDailyTaskDropdowns();
+
+    if (!projectName) return;
+
+    try {
+      const taskData = await api("/api/tasks");
+
+      dailyProjectTasks = (taskData.records || []).filter(
+        (record) =>
+          record.fields?.Project === projectName
+      );
+
+      refreshDailyTaskDropdowns();
+
+    } catch (error) {
+      console.error("Could not load tasks:", error);
+    }
+  });
+
+
+  // --------------------------------------------------
+  // ADD / REMOVE RESULT
+  // --------------------------------------------------
+  document.addEventListener("click", function (event) {
+
+    // + ADD RESULT
+    const addButton = event.target.closest("[data-add-daily-result]");
+
+    if (addButton) {
+      event.preventDefault();
+
+      const list = q("#daily-result-list");
+      const firstRow = list?.querySelector(".daily-result-row");
+
+      if (!list || !firstRow) return;
+
+      const newRow = firstRow.cloneNode(true);
+
+      const select = newRow.querySelector(".daily-task");
+      const number = newRow.querySelector(".daily-result-number");
+
+      if (select) {
+        select.value = "";
+      }
+
+      if (number) {
+        number.value = "";
+      }
+
+      list.appendChild(newRow);
+
+      refreshDailyTaskDropdowns();
+
+      return;
+    }
+
+
+    // × REMOVE RESULT
+    const removeButton = event.target.closest(
+      "[data-remove-daily-result]"
+    );
+
+    if (removeButton) {
+      event.preventDefault();
+
+      const row = removeButton.closest(".daily-result-row");
+      const list = removeButton.closest("#daily-result-list");
+
+      if (!row || !list) return;
+
+      const rows = list.querySelectorAll(".daily-result-row");
+
+      if (rows.length > 1) {
+        row.remove();
+      } else {
+        row.querySelector(".daily-task").value = "";
+        row.querySelector(".daily-result-number").value = "";
+      }
+    }
+  });
+
+
+  // --------------------------------------------------
+  // WAITING FOR
+  // --------------------------------------------------
+  const waitingFor = q("#daily-waiting-for");
+  const waitingWrap = q("#daily-waiting-details-wrap");
+  const waitingDetails = q("#daily-waiting-details");
+
+  waitingFor?.addEventListener("change", function () {
+    const selected = this.value;
+
+    if (!selected) {
+      waitingWrap.style.display = "none";
+      waitingDetails.value = "";
+      return;
+    }
+
+    waitingWrap.style.display = "block";
+
+    waitingDetails.placeholder =
+      `What do you need from ${selected}?`;
+  });
+
+
+  // --------------------------------------------------
+  // SPECIAL REQUEST TO CEO
+  // --------------------------------------------------
+  const ceoRequest = q("#daily-ceo-request");
+  const ceoDetails = q("#daily-ceo-request-details");
+
+  ceoRequest?.addEventListener("change", function () {
+    const isYes = this.value === "YES";
+
+    ceoDetails.style.display = isYes
+      ? "block"
+      : "none";
+
+    if (!isYes) {
+      q("#daily-ceo-request-type").value = "";
+      q("#daily-ceo-request-note").value = "";
+    }
+  });
+
+
+  // --------------------------------------------------
+  // SUBMIT DAILY REPORT
+  // --------------------------------------------------
+  submitButton.addEventListener("click", submitDailyReport);
+}
+
+
+// ======================================================
+// TASK DROPDOWNS
+// ======================================================
+
+function refreshDailyTaskDropdowns() {
+  qa(".daily-task").forEach((select) => {
+    const currentValue = select.value;
+
+    select.innerHTML =
+      `<option value="">Select task</option>` +
+      dailyProjectTasks
+        .map((record) => {
+          const taskName =
+            record.fields?.["Task Name"] || "";
+
+          return `
+            <option value="${escapeHtml(taskName)}">
+              ${escapeHtml(taskName)}
+            </option>
+          `;
+        })
+        .join("");
+
+    if (
+      dailyProjectTasks.some(
+        (record) =>
+          record.fields?.["Task Name"] === currentValue
+      )
+    ) {
+      select.value = currentValue;
+    }
+  });
+}
+
+
+function clearDailyTaskDropdowns() {
+  qa(".daily-task").forEach((select) => {
+    select.innerHTML =
+      `<option value="">Select task</option>`;
+  });
+}
+
+
+// ======================================================
+// SUBMIT DAILY REPORT
+// ======================================================
+
+async function submitDailyReport() {
+  const button = q("#submit-daily-report");
+
+  const project = q("#daily-project")?.value || "";
+
+  if (!project) {
+    alert("Please select a project.");
+    return;
+  }
+
+
+  // --------------------------------------------------
+  // TODAY'S RESULTS
+  // --------------------------------------------------
+  const results = qa(".daily-result-row")
+    .map((row) => {
+      const task =
+        row.querySelector(".daily-task")?.value || "";
+
+      const rawNumber =
+        row.querySelector(".daily-result-number")?.value;
+
+      if (
+        !task &&
+        (rawNumber === "" || rawNumber === undefined)
+      ) {
+        return null;
+      }
+
+      return {
+        task,
+        todayResult: Number(rawNumber || 0)
+      };
+    })
+    .filter(Boolean);
+
+
+  // At least one task/result pair
+  for (const result of results) {
+    if (!result.task) {
+      alert("Please select a task for each result.");
+      return;
+    }
+
+    if (
+      Number.isNaN(result.todayResult) ||
+      result.todayResult < 0
+    ) {
+      alert("Today's result must be a valid number.");
+      return;
+    }
+  }
+
+
+  // --------------------------------------------------
+  // AUTO USER INFO
+  //
+  // Later this will come from real login.
+  // For now localStorage can hold current login data.
+  // --------------------------------------------------
+  const employee =
+    localStorage.getItem("ohtUserName") || "Diane";
+
+  const department =
+    localStorage.getItem("ohtUserDepartment") ||
+    "KOREA OPS";
+
+
+  // --------------------------------------------------
+  // WAITING FOR
+  // --------------------------------------------------
+  const waitingFor =
+    q("#daily-waiting-for")?.value || "";
+
+  const waitingDetails =
+    q("#daily-waiting-details")?.value.trim() || "";
+
+
+  // --------------------------------------------------
+  // CEO REQUEST
+  // --------------------------------------------------
+  const hasCEORequest =
+    q("#daily-ceo-request")?.value === "YES";
+
+  const ceoRequestType = hasCEORequest
+    ? q("#daily-ceo-request-type")?.value || ""
+    : "";
+
+  const ceoRequestNote = hasCEORequest
+    ? q("#daily-ceo-request-note")?.value.trim() || ""
+    : "";
+
+
+  if (hasCEORequest && !ceoRequestType) {
+    alert("Please select the CEO request type.");
+    return;
+  }
+
+
+  // --------------------------------------------------
+  // FINAL PAYLOAD
+  // --------------------------------------------------
+  const payload = {
+    date: new Date().toISOString(),
+
+    employee,
+    department,
+
+    project,
+
+    results,
+
+    update:
+      q("#daily-update-note")?.value.trim() || "",
+
+    waitingFor,
+    waitingForDetails: waitingDetails,
+
+    specialRequestCEO: hasCEORequest,
+    ceoRequestType,
+    ceoRequestNote
+  };
+
+
+  console.log("DAILY REPORT PAYLOAD:", payload);
+
+
+  button.disabled = true;
+  button.textContent = "SUBMITTING...";
+
+  try {
+
+    // NEXT BACKEND ENDPOINT
+    const response = await api("/api/daily-reports", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    alert("Daily report submitted.");
+
+    console.log("DAILY REPORT RESPONSE:", response);
+
+    location.href = "project.html";
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(error.message);
+
+    button.disabled = false;
+    button.textContent =
+      "SUBMIT DAILY REPORT →";
+  }
+}
+
+
+// ======================================================
+// SAFE HTML
+// ======================================================
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+
+// START DAILY REPORT
+initDailyReport();
 
 // ======================================================
 // submitProject()
 // ======================================================
-async function api(path, options = {}) {
+  async function api(path, options = {}) {
   const response = await fetch(API_URL + path, {
     headers: {
       "Content-Type": "application/json",
@@ -27,12 +440,12 @@ async function api(path, options = {}) {
   return data;
 }
 
-function numberFrom(value) {
+  function numberFrom(value) {
   const match = String(value || "").match(/[0-9.]+/);
   return match ? Number(match[0]) : 0;
 }
 
-function parseDate(value) {
+  function parseDate(value) {
   const raw = String(value || "")
     .replace(/^Needed by:\s*/i, "")
     .trim();
@@ -188,60 +601,6 @@ document.addEventListener("click", function (event) {
       row.remove();
     }
   }
-});
-// EXECUTION PLAN — ADD / REMOVE ACTION
-// ======================================================
-// CEO PROJECT REVIEW
-// ======================================================
-
-async function reviewProject(decision) {
-  const projectId =
-    localStorage.getItem("ohtProjectId");
-
-  if (!projectId) {
-    alert("No submitted project found.");
-    return;
-  }
-
-
-  const priority = prioritySelect
-    ? Number(prioritySelect.value) ||
-      prioritySelect.selectedIndex + 1
-    : 1;
-
-  const payload = {
-    decision,
-    priority,
-    ceo: "Jinsol",
-    comment: q("#ceo-comment")?.value || "",
-  };
-
-  try {
-    await api(
-      `/api/projects/${projectId}/review`,
-      {
-        method: "POST",
-        body: JSON.stringify(payload),
-      }
-    );
-
-    if (decision === "APPROVE") {
-      alert("Project approved.");
-      location.href = "project.html";
-    } else if (
-      decision === "REQUEST_REVISION"
-    ) {
-      alert("Revision requested.");
-      location.href = "index.html";
-    } else {
-      alert("Project rejected.");
-      location.href = "index.html";
-    }
-  } catch (error) {
-    alert(error.message);
-  }
-}
-
 
 q("#submit-project")?.addEventListener(
   "click",
