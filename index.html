@@ -1,23 +1,1050 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OHT Internal Ops</title><link rel="stylesheet" href="style.css"></head><body>
-<div class="shell">
-<header class="header"><div><div class="brand">OHT / OPS</div><div class="eyebrow muted" style="margin-top:8px">Internal Operations Dashboard</div></div><div class="eyebrow">CEO VIEW</div></header>
-<main class="content">
-<div class="topline"><div><div class="eyebrow muted">Wednesday · August 26, 2026</div><h1 style="margin-top:8px">Decision Dashboard</h1></div><a class="btn" href="submit-project.html">+ SUBMIT PROJECT</a></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OHT Daily Dashboard - Login</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<section class="section"><div class="section-title">CEO INPUT NEEDED</div>
-<div class="grid three">
-<a class="card clickable" href="review-all.html"><div class="eyebrow">KOREA WEBSITE</div><div class="metric" style="margin-top:12px">4</div><div class="sub">inputs needed</div><div class="sub" style="margin-top:14px">REVIEW ALL →</div></a>
-<a class="card clickable" href="review-all.html"><div class="eyebrow">INFLUENCER MARKETING</div><div class="metric" style="margin-top:12px">2</div><div class="sub">approvals needed</div><div class="sub" style="margin-top:14px">REVIEW ALL →</div></a>
-<a class="card clickable" href="review-all.html"><div class="eyebrow">INVENTORY</div><div class="metric" style="margin-top:12px">1</div><div class="sub">decision needed</div><div class="sub" style="margin-top:14px">REVIEW ALL →</div></a>
-</div></section>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #ffffff;
+        }
 
-<section class="section"><div class="section-title">ACTIVE PROJECTS</div>
-<div class="tabs"><button class="tab active" data-tab>MARKETING</button><button class="tab" data-tab>SHIPPING</button><button class="tab" data-tab>INVENTORY</button><button class="tab" data-tab>CONTENT</button></div>
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+        }
 
-<a class="project-row" href="project.html"><div><div class="name">DIANE</div><div class="role">KOREA OPS</div></div><div><div class="project">Korea Website Launch</div><div class="sub">PG application · product registration · launch assets</div></div><div><span id="korea-status" class="status blocked">BLOCKED</span><div class="sub">Waiting on Jinsol: business info</div></div><div><select class="priority-select"><option>Priority 01</option><option>Priority 02</option><option>Priority 03</option></select></div></a>
-<div class="project-row"><div><div class="name">NAOMI</div><div class="role">CONTENT</div></div><div><div class="project">Short-form Content Growth</div><div class="sub">12 weekly posts target</div></div><div><span class="status ready">READY</span><div class="sub">Next: film 3 concepts</div></div><div><select class="priority-select"><option>Priority 02</option><option>Priority 01</option><option>Priority 03</option></select></div></div>
-<div class="project-row"><div><div class="name">ANDY</div><div class="role">OPERATIONS</div></div><div><div class="project">Customer Resolution SLA</div><div class="sub">91% within 24h</div></div><div><span class="status waiting">WAITING</span><div class="sub">External carrier response</div></div><div><select class="priority-select"><option>Priority 03</option><option>Priority 01</option><option>Priority 02</option></select></div></div>
-</section>
+        .login-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 60px 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        }
 
-<section class="section"><div class="section-title">BLOCKERS BY SOURCE</div><div class="grid three"><div class="card soft"><div class="metric">3</div><div class="sub">Blocked by CEO</div></div><div class="card soft"><div class="metric">2</div><div class="sub">Blocked by asset</div></div><div class="card soft"><div class="metric">1</div><div class="sub">Blocked by external party</div></div></div></section>
-</main><footer class="footer"><span>OHT SYSTEM</span><span>DECIDE → UNBLOCK → EXECUTE</span></footer></div><script src="app.js"></script></body></html>
+        .login-logo {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .login-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .login-subtitle {
+            font-size: 13px;
+            color: #999;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .login-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0;
+        }
+
+        .login-divider-line {
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .login-divider-text {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Google Login Button */
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border: 1px solid #d0d0d0;
+            background: #ffffff;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .google-btn:hover {
+            background: #fafafa;
+            border-color: #000;
+        }
+
+        .google-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Demo Button */
+        .demo-btn {
+            padding: 12px 16px;
+            border: 1px solid #d0d0d0;
+            background: #f5f5f5;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .demo-btn:hover {
+            background: #e8e8e8;
+            border-color: #000;
+        }
+
+        /* Dashboard */
+        .dashboard-container {
+            display: none;
+            min-height: 100vh;
+            background: #f5f5f5;
+        }
+
+        .dashboard-container.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .user-email {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            border: 1px solid #d0d0d0;
+            background: #ffffff;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-btn:hover {
+            background: #fafafa;
+            border-color: #000;
+        }
+
+        .view-btn.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            border: 1px solid #d0d0d0;
+            background: #ffffff;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #fafafa;
+            border-color: #000;
+        }
+
+        /* Content */
+        .dashboard-content {
+            flex: 1;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* View Sections */
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* Employee View Styles */
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .title {
+            font-size: 40px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #999;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 0;
+        }
+
+        .tab {
+            padding: 12px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: #ffffff;
+            border: 1px solid #d0d0d0;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #999;
+        }
+
+        .tab:hover {
+            color: #000;
+            background: #fafafa;
+        }
+
+        .tab.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 20px;
+        }
+
+        /* Update Rows */
+        .update-rows {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .update-row {
+            display: grid;
+            grid-template-columns: 120px 1fr 200px 80px;
+            gap: 24px;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.2s;
+        }
+
+        .update-row:last-child {
+            border-bottom: none;
+        }
+
+        .update-row:hover {
+            background: #fafafa;
+        }
+
+        .update-name {
+            font-weight: 600;
+            color: #000;
+            font-size: 13px;
+        }
+
+        .update-role {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .update-project-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .update-project {
+            font-weight: 600;
+            color: #000;
+            font-size: 13px;
+        }
+
+        .update-details {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .update-metric {
+            text-align: right;
+            font-size: 20px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .update-metric-label {
+            font-size: 9px;
+            color: #999;
+        }
+
+        .update-priority {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .priority-dropdown {
+            padding: 6px 10px;
+            font-size: 11px;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            background: #ffffff;
+            cursor: pointer;
+        }
+
+        .priority-dropdown:hover {
+            border-color: #000;
+        }
+
+        /* CEO View Styles */
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .action-card {
+            background: #ffffff;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-card:hover {
+            border-color: #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .action-card.urgent {
+            border: 2px solid #000;
+            background: #fafafa;
+        }
+
+        .action-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .action-team {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 12px;
+        }
+
+        .action-count {
+            font-size: 28px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .action-warning {
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 6px;
+        }
+
+        /* Hidden Tabs */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 40px 24px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 16px;
+                padding: 20px;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .view-btn {
+                flex: 1;
+            }
+
+            .update-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .update-metric {
+                text-align: left;
+            }
+
+            .title {
+                font-size: 28px;
+            }
+
+            .action-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">OHT / Daily</div>
+            <h1 class="login-title">Dashboard</h1>
+            <p class="login-subtitle">Sign in to access your daily operations dashboard</p>
+            
+            <div class="login-content">
+                <!-- Google Sign-In Button -->
+                <button class="google-btn" onclick="initiateGoogleSignIn()" id="googleSignInBtn">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+
+                <div class="login-divider">
+                    <div class="login-divider-line"></div>
+                    <div class="login-divider-text">or</div>
+                    <div class="login-divider-line"></div>
+                </div>
+
+                <button class="demo-btn" onclick="loginAsDemo()">
+                    Demo Access (Employee View)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Google Sign-In Container -->
+    <div id="g_id_onload"
+         data-client_id="337829766336-097j7o7h2nahieg07vc8ib1hppanr46m.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse"
+         style="display: none;">
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboardScreen" class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="header-left">
+                <div class="header-logo">OHT / Daily</div>
+                <div class="header-user">
+                    <div class="user-avatar" id="userAvatar">D</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">User</div>
+                        <div class="user-email" id="userEmail">user@example.com</div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="view-btn active" id="employeeViewBtn" onclick="switchView('employee')">
+                    Employee View
+                </button>
+                <button class="view-btn" id="ceoViewBtn" onclick="switchView('ceo')">
+                    CEO View
+                </button>
+                <button class="logout-btn" onclick="logout()">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="dashboard-content">
+            <div class="content-wrapper">
+                <!-- Employee View -->
+                <div id="employeeView" class="view-section active">
+                    <div class="header">
+                        <div class="logo">OHT / Daily</div>
+                        <h1 class="title">Main Dashboard</h1>
+                        <p class="subtitle">Employee morning check · <span id="currentDate">August 26, 2026</span></p>
+                    </div>
+
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchTab(event, 'marketing')">Marketing</div>
+                        <div class="tab" onclick="switchTab(event, 'shipping')">Shipping</div>
+                        <div class="tab" onclick="switchTab(event, 'inventory')">Inventory</div>
+                        <div class="tab" onclick="switchTab(event, 'content')">Content</div>
+                    </div>
+
+                    <!-- Marketing Tab -->
+                    <div id="marketing" class="tab-content active">
+                        <div class="section">
+                            <div class="section-title">Yesterday's OHT Update</div>
+                            <div class="update-rows">
+                                <div class="update-row">
+                                    <div>
+                                        <div class="update-name">DIANE</div>
+                                        <div class="update-role">Influencer Lead</div>
+                                    </div>
+                                    <div class="update-project-section">
+                                        <div class="update-project">Influencer Partnership Expansion</div>
+                                        <div class="update-details">12 outreach · 6 follow-ups · 2 confirmed</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div class="update-metric">7 / 10</div>
+                                        <div class="update-metric-label">Confirmed collaborations</div>
+                                    </div>
+                                    <div class="update-priority">
+                                        <select class="priority-dropdown">
+                                            <option>Priority 01</option>
+                                            <option>Priority 02</option>
+                                            <option>Priority 03</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="update-row">
+                                    <div>
+                                        <div class="update-name">MIA</div>
+                                        <div class="update-role">Partnerships</div>
+                                    </div>
+                                    <div class="update-project-section">
+                                        <div class="update-project">Korea Retail Outreach</div>
+                                        <div class="update-details">3 store pitches · 2 scheduled meetings</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div class="update-metric">2 / 5</div>
+                                        <div class="update-metric-label">Retail partnerships</div>
+                                    </div>
+                                    <div class="update-priority">
+                                        <select class="priority-dropdown">
+                                            <option>Priority 05</option>
+                                            <option>Priority 01</option>
+                                            <option>Priority 02</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Tab -->
+                    <div id="shipping" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">Yesterday's OHT Update</div>
+                            <div class="update-rows">
+                                <div class="update-row">
+                                    <div>
+                                        <div class="update-name">SHIPPING TEAM</div>
+                                        <div class="update-role">Fulfillment</div>
+                                    </div>
+                                    <div class="update-project-section">
+                                        <div class="update-project">International Order Processing</div>
+                                        <div class="update-details">24 orders processed · 18 shipped · 1 pending customs</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div class="update-metric">96%</div>
+                                        <div class="update-metric-label">24h SLA compliance</div>
+                                    </div>
+                                    <div class="update-priority">
+                                        <select class="priority-dropdown">
+                                            <option>Priority 02</option>
+                                            <option>Priority 01</option>
+                                            <option>Priority 03</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Tab -->
+                    <div id="inventory" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">Yesterday's OHT Update</div>
+                            <div class="update-rows">
+                                <div class="update-row">
+                                    <div>
+                                        <div class="update-name">INVENTORY TEAM</div>
+                                        <div class="update-role">Stock Management</div>
+                                    </div>
+                                    <div class="update-project-section">
+                                        <div class="update-project">SKU Inventory Balance</div>
+                                        <div class="update-details">18 SKUs checked · 2 restocks processed · 1 awaiting QC</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div class="update-metric">82/86</div>
+                                        <div class="update-metric-label">SKUs in stock</div>
+                                    </div>
+                                    <div class="update-priority">
+                                        <select class="priority-dropdown">
+                                            <option>Priority 03</option>
+                                            <option>Priority 01</option>
+                                            <option>Priority 02</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Tab -->
+                    <div id="content" class="tab-content">
+                        <div class="section">
+                            <div class="section-title">Yesterday's OHT Update</div>
+                            <div class="update-rows">
+                                <div class="update-row">
+                                    <div>
+                                        <div class="update-name">NAOMI</div>
+                                        <div class="update-role">Content Manager</div>
+                                    </div>
+                                    <div class="update-project-section">
+                                        <div class="update-project">Short-form Content Growth</div>
+                                        <div class="update-details">3 concepts · 2 drafts · 1 posted</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div class="update-metric">8 / 12</div>
+                                        <div class="update-metric-label">Weekly posts</div>
+                                    </div>
+                                    <div class="update-priority">
+                                        <select class="priority-dropdown">
+                                            <option>Priority 02</option>
+                                            <option>Priority 01</option>
+                                            <option>Priority 03</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="update-row">
+                                    <div>
+                                        <div class="update-name">JAY</div>
+                                        <div class="update-role">Social Manager</div>
+                                    </div>
+                                    <div class="update-project-section">
+                                        <div class="update-project">Community Growth</div>
+                                        <div class="update-details">124 new followers · 18 engaged DMs · 3 collabs scheduled</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div class="update-metric">4.2%</div>
+                                        <div class="update-metric-label">Weekly growth rate</div>
+                                    </div>
+                                    <div class="update-priority">
+                                        <select class="priority-dropdown">
+                                            <option>Priority 04</option>
+                                            <option>Priority 01</option>
+                                            <option>Priority 02</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CEO View -->
+                <div id="ceoView" class="view-section">
+                    <div class="header">
+                        <div class="logo">OHT / Daily</div>
+                        <h1 class="title">CEO Dashboard</h1>
+                        <p class="subtitle">Executive decision board · <span id="ceoCurrentDate">August 26, 2026</span></p>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">Action Needed</div>
+                        <div class="action-cards">
+                            <div class="action-card urgent">
+                                <div class="action-label">Team</div>
+                                <div class="action-team">
+                                    MARKETING
+                                    <span class="action-warning">△</span>
+                                </div>
+                                <div class="action-count">4</div>
+                            </div>
+
+                            <div class="action-card">
+                                <div class="action-label">Team</div>
+                                <div class="action-team">INVENTORY</div>
+                                <div class="action-count">2</div>
+                            </div>
+
+                            <div class="action-card">
+                                <div class="action-label">Team</div>
+                                <div class="action-team">CONTENT</div>
+                                <div class="action-count">1</div>
+                            </div>
+
+                            <div class="action-card">
+                                <div class="action-label">Team</div>
+                                <div class="action-team">SHIPPING</div>
+                                <div class="action-count">1</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">Team Overview</div>
+                        <div class="update-rows">
+                            <div class="update-row">
+                                <div>
+                                    <div class="update-name">DIANE</div>
+                                    <div class="update-role">Influencer Lead</div>
+                                </div>
+                                <div class="update-project-section">
+                                    <div class="update-project">Influencer Partnership Expansion</div>
+                                    <div class="update-details">12 outreach · 7/10 confirmed</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="update-metric">7 / 10</div>
+                                    <div class="update-metric-label">Confirmations</div>
+                                </div>
+                                <div class="update-priority">
+                                    <select class="priority-dropdown">
+                                        <option>Approved</option>
+                                        <option>Pending</option>
+                                        <option>Rejected</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="update-row">
+                                <div>
+                                    <div class="update-name">NAOMI</div>
+                                    <div class="update-role">Content Manager</div>
+                                </div>
+                                <div class="update-project-section">
+                                    <div class="update-project">Short-form Content Growth</div>
+                                    <div class="update-details">8/12 weekly posts</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="update-metric">8 / 12</div>
+                                    <div class="update-metric-label">Posts published</div>
+                                </div>
+                                <div class="update-priority">
+                                    <select class="priority-dropdown">
+                                        <option>Approved</option>
+                                        <option>Pending</option>
+                                        <option>Rejected</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Config
+        const APP_CONFIG = {
+            app: "OHT Daily Dashboard",
+            version: "1.0.0",
+            oauth: {
+                google_client_id: "337829766336-097j7o7h2nahieg07vc8ib1hppanr46m.apps.googleusercontent.com"
+            }
+        };
+
+        // Demo Data
+        const DEMO_EMPLOYEE_DATA = {
+            email: 'diane@ohtnyc.com',
+            name: 'Diane',
+            picture: 'https://via.placeholder.com/36',
+            role: 'Marketing & Operations Coordinator',
+            team: 'Marketing',
+            timestamp: new Date().getTime()
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+            checkAuthStatus();
+            initializeGoogleSignIn();
+        });
+
+        // Initialize Google Sign-In
+        function initializeGoogleSignIn() {
+            if (window.google && window.google.accounts) {
+                window.google.accounts.id.initialize({
+                    client_id: APP_CONFIG.oauth.google_client_id,
+                    callback: handleCredentialResponse
+                });
+            }
+        }
+
+        // Initiate Google Sign-In
+        function initiateGoogleSignIn() {
+            if (window.google && window.google.accounts) {
+                window.google.accounts.id.renderButton(
+                    document.getElementById('googleSignInBtn'),
+                    { theme: 'outline', size: 'large' }
+                );
+                window.google.accounts.id.prompt();
+            }
+        }
+
+        // Google Sign-In Callback
+        function handleCredentialResponse(response) {
+            try {
+                // Decode JWT token
+                const base64Url = response.credential.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                const userData = JSON.parse(jsonPayload);
+                loginUser(userData);
+            } catch (error) {
+                console.error('Google Sign-In Error:', error);
+                alert('로그인 중 오류가 발생했습니다. Demo 접근을 사용해주세요.');
+            }
+        }
+
+        // Login with Google
+        function loginUser(userData) {
+            const userdata = {
+                email: userData.email,
+                name: userData.name,
+                picture: userData.picture,
+                timestamp: new Date().getTime()
+            };
+            
+            sessionStorage.setItem('oht_user', JSON.stringify(userdata));
+            showDashboard(userdata);
+        }
+
+        // Demo Login - Employee View
+        function loginAsDemo() {
+            sessionStorage.setItem('oht_user', JSON.stringify(DEMO_EMPLOYEE_DATA));
+            showDashboard(DEMO_EMPLOYEE_DATA);
+        }
+
+        // Show Dashboard
+        function showDashboard(userData) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboardScreen').classList.add('active');
+            
+            // Set user info
+            document.getElementById('userName').textContent = userData.name;
+            document.getElementById('userEmail').textContent = userData.email;
+            document.getElementById('userAvatar').textContent = userData.name.charAt(0).toUpperCase();
+            
+            // Default to Employee View
+            switchView('employee');
+            switchTab(null, 'marketing');
+            updateCurrentDate();
+        }
+
+        // Check Auth Status
+        function checkAuthStatus() {
+            const user = sessionStorage.getItem('oht_user');
+            if (user) {
+                showDashboard(JSON.parse(user));
+            }
+        }
+
+        // Logout
+        function logout() {
+            sessionStorage.removeItem('oht_user');
+            document.getElementById('dashboardScreen').classList.remove('active');
+            document.getElementById('loginScreen').style.display = 'flex';
+            
+            // Reset tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelector('.tab').classList.add('active');
+            document.getElementById('marketing').classList.add('active');
+        }
+
+        // Switch View
+        function switchView(view) {
+            document.querySelectorAll('.view-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            if (view === 'employee') {
+                document.getElementById('employeeView').classList.add('active');
+                document.getElementById('employeeViewBtn').classList.add('active');
+            } else {
+                document.getElementById('ceoView').classList.add('active');
+                document.getElementById('ceoViewBtn').classList.add('active');
+            }
+        }
+
+        // Switch Tab
+        function switchTab(event, tabName) {
+            if (event) {
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                event.target.classList.add('active');
+            }
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            const tabContent = document.getElementById(tabName);
+            if (tabContent) {
+                tabContent.classList.add('active');
+            }
+        }
+
+        // Update Current Date
+        function updateCurrentDate() {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('en-US', options);
+            document.getElementById('currentDate').textContent = today;
+            document.getElementById('ceoCurrentDate').textContent = today;
+        }
+    </script>
+</body>
+</html>
