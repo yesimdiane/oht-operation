@@ -4,7 +4,6 @@ function qa(sel){ return [...document.querySelectorAll(sel)]; }
 const q = (s) => document.querySelector(s);
 const qa = (s) => [...document.querySelectorAll(s)];
 
-}
 // ======================================================
 // DAILY REPORT
 // ======================================================
@@ -638,7 +637,7 @@ async function initDailyReport() {
     });
 
     list.appendChild(newRow);
-    return;    }
+    return;    
 
   const removeButton = event.target.closest("[data-remove-action]");
 
@@ -1126,4 +1125,4 @@ q("#submit-all-decisions")
       } catch (error) {
         alert(error.message);
       }
-    }
+    
