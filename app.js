@@ -560,11 +560,67 @@ const tasks = [...document.querySelectorAll(".action-item")].map(row => ({
 }
 
 // EXECUTION PLAN — ADD / REMOVE ACTION
-document.addEventListener("click", function (event) {
+let dailyProjectTasks = [];
 
-  const addButton = event.addEventListener{.closest("[data-add-action]");
+async function initDailyReport() {
+  const submitButton = q("#submit-daily-report");
 
-  if (addButton) {
+  // daily-update.html이 아니면 실행하지 않음
+  if (!submitButton) return;
+    const projectSelect = q("#daily-project");
+  // ======================================================
+// DAILY REPORT
+// ======================================================
+
+let dailyProjectTasks = [];
+
+async function initDailyReport() {
+  const submitButton = q("#submit-daily-report");
+
+  // daily-update.html이 아니면 실행하지 않음
+  if (!submitButton) return;
+
+  const projectSelect = q("#daily-project");
+
+  try {
+    // --------------------------------------------------
+    // LOAD PROJECTS
+    // --------------------------------------------------
+    const projectData = await api("/api/projects");
+
+    const activeProjects = (projectData.records || []).filter((record) => {
+      const status = record.fields?.Status || "";
+
+      return [
+        "APPROVED",
+        "IN PROGRESS",
+        "BLOCKED",
+        "READY"
+      ].includes(status);
+    });
+    projectSelect.innerHTML =
+      `<option value="">Select project</option>` +
+      activeProjects
+        .map((record) => {
+          const name = record.fields["Project Name"] || "";
+
+          return `
+            <option value="${escapeHtml(name)}">
+              ${escapeHtml(name)}
+            </option>
+          `;
+        })
+        .join("");
+
+  } catch (error) {
+
+    console.error("Could not load projects:", error);
+  }
+}
+
+ projectSelect.innerHTML =
+      `<option value="">Could not load projects</option>`;
+  }
     event.addEventListener(Date.now(), "click");
 
     const list = document.querySelector(".action-list");
@@ -582,8 +638,7 @@ document.addEventListener("click", function (event) {
     });
 
     list.appendChild(newRow);
-    return;
-  }
+    return;    }
 
   const removeButton = event.target.closest("[data-remove-action]");
 
@@ -622,7 +677,6 @@ q("#reject-project")?.addEventListener(
   () => reviewProject("REJECT")
 );
 
-
 // ======================================================
 // CEO INPUT DASHBOARD
 // ======================================================
@@ -630,71 +684,116 @@ q("#reject-project")?.addEventListener(
 async function loadDashboard() {
   if (!q('[data-page="dashboard"]')) return;
 
+  const container = q("#ceo-input-cards");
+  if (!container) return;
+
   try {
-    const result = await api(
-      "/api/ceo-inputs"
-    );
+    // Daily Reports에서 CEO special request 불러오기
+    const result = await api("/api/daily-reports");
 
-    const container = q("#ceo-input-cards");
+    const reports = result.records || [];
 
-    if (!container) return;
+    // CEO 요청이 YES인 report만 추출
+    const ceoRequests = reports.filter((record) => {
+      const fields = record.fields || {};
 
-    if (!result.projects.length) {
+      return (
+        fields["Special Request CEO"] === true ||
+        fields["Special Request CEO"] === "YES"
+      );
+    });
+
+    // 요청 없음
+    if (!ceoRequests.length) {
       container.innerHTML = `
         <div class="card">
           <div class="eyebrow">
             NO CEO INPUT NEEDED
           </div>
+
           <div class="sub" style="margin-top:10px">
-            No blocked decisions right now.
+            No pending CEO requests right now.
           </div>
         </div>
       `;
+
       return;
     }
 
-    container.innerHTML =
-      result.projects
-        .map(
-          (item) => `
-        <a
-          class="card clickable"
-          href="review-all.html?project=${encodeURIComponent(
-            item.project
-          )}"
-        >
-          <div class="eyebrow">
-            ${item.project}
-          </div>
+    // CEO 요청 카드 생성
+    container.innerHTML = ceoRequests
+      .map((record) => {
+        const f = record.fields || {};
 
-          <div
-            class="metric"
-            style="margin-top:12px"
-          >
-            ${item.count}
-          </div>
+        const project =
+          f["Project"] || "Untitled Project";
 
-          <div class="sub">
-            inputs needed
-          </div>
+        const employee =
+          f["Employee"] || "";
 
-          <div
-            class="sub"
-            style="margin-top:14px"
-          >
-            REVIEW ALL →
+        const department =
+          f["Department"] || "";
+
+        const type =
+          f["CEO Request Type"] || "REQUEST";
+
+        const note =
+          f["CEO Request Note"] || "";
+
+        const date =
+          f["Date"] || "";
+
+        return `
+          <div class="card">
+
+            <div class="eyebrow">
+              ${escapeHtml(type)}
+            </div>
+
+            <div class="project" style="margin-top:8px">
+              ${escapeHtml(project)}
+            </div>
+
+            <div class="sub" style="margin-top:6px">
+              ${escapeHtml(employee)}
+              ${department ? " · " + escapeHtml(department) : ""}
+            </div>
+
+            <div style="margin-top:16px">
+              ${escapeHtml(note)}
+            </div>
+
+            ${
+              date
+                ? `
+                  <div class="sub" style="margin-top:12px">
+                    ${escapeHtml(date)}
+                  </div>
+                `
+                : ""
+            }
+
           </div>
-        </a>
-      `
-        )
-        .join("");
+        `;
+      })
+      .join("");
+
   } catch (error) {
-    console.error(error);
+    console.error("CEO dashboard load failed:", error);
+
+    container.innerHTML = `
+      <div class="card">
+        <div class="eyebrow">
+          COULD NOT LOAD CEO REQUESTS
+        </div>
+
+        <div class="sub" style="margin-top:10px">
+          ${escapeHtml(error.message)}
+        </div>
+      </div>
+    `;
   }
 }
-
-loadDashboard();
-
 
 // ======================================================
 // REVIEW ALL NAVIGATION
@@ -1028,4 +1127,3 @@ q("#submit-all-decisions")
         alert(error.message);
       }
     }
-  )
