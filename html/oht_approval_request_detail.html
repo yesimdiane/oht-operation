@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OHT Daily Operations - Approval Request</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            padding: 40px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: #2c2c2c;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 16px;
+        }
+
+        .request-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            padding: 24px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            margin-top: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c2c2c;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 12px;
+        }
+
+        .section-content {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #2c2c2c;
+            white-space: pre-wrap;
+        }
+
+        /* Request Details Box */
+        .request-detail-box {
+            padding: 20px;
+            background: #fff3e0;
+            border: 1px solid #ffe0b2;
+            border-radius: 4px;
+            margin-bottom: 32px;
+        }
+
+        .request-detail-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 8px;
+        }
+
+        .request-detail-content {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #2c2c2c;
+        }
+
+        .request-detail-meta {
+            font-size: 12px;
+            color: #f57c00;
+            margin-top: 12px;
+            font-weight: 600;
+        }
+
+        /* Context Box */
+        .context-section {
+            padding: 20px;
+            background: #f5f5f5;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            margin-bottom: 32px;
+        }
+
+        .context-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 12px;
+        }
+
+        .context-content {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #2c2c2c;
+        }
+
+        .context-item {
+            margin-bottom: 12px;
+        }
+
+        .context-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .context-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        /* Decision Section */
+        .decision-section {
+            margin-top: 48px;
+            padding-top: 40px;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .decision-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 24px;
+        }
+
+        .decision-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .decision-button {
+            padding: 16px;
+            border: 2px solid #e8e8e8;
+            background: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .decision-button:hover {
+            border-color: #2c2c2c;
+            background: #f5f5f5;
+        }
+
+        .decision-button.selected {
+            border-color: #2c2c2c;
+            background: #2c2c2c;
+            color: #ffffff;
+        }
+
+        .decision-button.approve {
+            border-color: #4CAF50;
+        }
+
+        .decision-button.approve.selected {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .decision-button.decline {
+            border-color: #d32f2f;
+        }
+
+        .decision-button.decline.selected {
+            background: #d32f2f;
+            border-color: #d32f2f;
+        }
+
+        .decision-button-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .decision-button-desc {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* Comment Section */
+        .comment-section {
+            margin-bottom: 24px;
+        }
+
+        .comment-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .comment-textarea:focus {
+            outline: none;
+            border-color: #2c2c2c;
+            background: #fafafa;
+        }
+
+        /* Submit Buttons */
+        .submit-section {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .submit-button {
+            padding: 12px 32px;
+            background: #2c2c2c;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            background: #000;
+        }
+
+        .submit-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .cancel-button {
+            padding: 12px 32px;
+            background: #ffffff;
+            color: #2c2c2c;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cancel-button:hover {
+            border-color: #2c2c2c;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .request-info {
+                grid-template-columns: 1fr;
+            }
+
+            .decision-options {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-section {
+                flex-direction: column-reverse;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="breadcrumb">
+                <a onclick="goBack()">← APPROVAL QUEUE</a>
+            </div>
+            <h1 class="page-title" id="requestTitle">💰 Budget Increase: Gifting Budget</h1>
+            
+            <div class="request-info">
+                <div class="info-item">
+                    <span class="info-label">Project</span>
+                    <span class="info-value" id="projectName">Influencer Partnership Expansion</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">From</span>
+                    <span class="info-value" id="requestFrom">Diane</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Due</span>
+                    <span class="info-value" id="dueDate">Aug 27</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Request Details -->
+            <div class="request-detail-box">
+                <div class="request-detail-title">What's being requested?</div>
+                <div class="request-detail-content" id="requestDetails">
+                    <strong>Current:</strong> $1,000 / month<br/>
+                    <strong>Proposed:</strong> $1,500 / month<br/>
+                    <strong>Increase:</strong> $500 / month (+50%)
+                </div>
+                <div class="request-detail-meta">⏱ Needed by: Aug 27</div>
+            </div>
+
+            <!-- Reasoning -->
+            <div class="section">
+                <div class="section-title">Why is this increase needed?</div>
+                <div class="section-content" id="reasoning">Higher budget for competitive gifting to mid-tier creators (50k-500k followers). Current budget only covers micro-influencers; expanding to mid-tier requires better gifting incentive.
+
+ROI projection:
+- 50 outreaches/week → 10 confirmed collaborations/month (20% conversion)
+- Each collaboration = ~100k impressions average
+- Total monthly reach: ~1M impressions from influencer channel alone
+- Cost per impression: $1,500 ÷ 1M = $0.0015 (industry avg: $0.002-0.005)</div>
+            </div>
+
+            <!-- Project Context -->
+            <div class="context-section">
+                <div class="context-title">📌 Project Context</div>
+                <div class="context-content">
+                    <div class="context-item">
+                        <div class="context-label">Project Status</div>
+                        <div>Active (Approved Aug 20, 2026)</div>
+                    </div>
+                    <div class="context-item">
+                        <div class="context-label">KPI Target</div>
+                        <div>4 → 10 confirmed collaborations/month</div>
+                    </div>
+                    <div class="context-item">
+                        <div class="context-label">Current Progress</div>
+                        <div>Week 1: 3/50 outreaches (6% · on track) · 0/10 collaborations confirmed</div>
+                    </div>
+                    <div class="context-item">
+                        <div class="context-label">Budget Allocation</div>
+                        <div>Marketing ops: $1,000/gifting + $500/content production = $1,500 total</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decision Section -->
+            <div class="decision-section">
+                <div class="decision-title">What's Your Decision?</div>
+
+                <div class="decision-options">
+                    <button class="decision-button approve" onclick="selectDecision('approve')">
+                        <div class="decision-button-label">✓ APPROVE</div>
+                        <div class="decision-button-desc">Increase to $1,500/month</div>
+                    </button>
+                    <button class="decision-button decline" onclick="selectDecision('decline')">
+                        <div class="decision-button-label">✕ DECLINE</div>
+                        <div class="decision-button-desc">Keep at $1,000/month</div>
+                    </button>
+                </div>
+
+                <!-- Optional Comment -->
+                <div class="comment-section">
+                    <label class="comment-label">Comments (optional)</label>
+                    <textarea class="comment-textarea" id="commentText" placeholder="Add context or conditions for this decision..."></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="submit-section">
+                    <button class="cancel-button" onclick="goBack()">Cancel</button>
+                    <button class="submit-button" id="submitBtn" onclick="submitDecision()" disabled>
+                        SUBMIT DECISION
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDecision = null;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const approvalId = urlParams.get('approvalId') || 'apr_001';
+
+        // TODO: Airtable에서 approvalId로 요청 데이터 로드
+
+        function selectDecision(decision) {
+            selectedDecision = decision;
+            
+            // Update buttons
+            document.querySelectorAll('.decision-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.closest('.decision-button').classList.add('selected');
+
+            // Enable submit button
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        async function submitDecision() {
+            if (!selectedDecision) {
+                alert('Please select a decision');
+                return;
+            }
+
+            const submissionData = {
+                approvalId: approvalId,
+                decision: selectedDecision,
+                comments: document.getElementById('commentText').value,
+                decidedAt: new Date().toISOString()
+            };
+
+            console.log('Submitting approval request:', submissionData);
+
+            // TODO: Backend으로 의사결정 저장
+            // PATCH /api/approval-requests/{approvalId}/decision
+
+            alert(`✅ Decision submitted: ${selectedDecision.toUpperCase()}`);
+            
+            // Redirect back to queue
+            // setTimeout(() => {
+            //     goBack();
+            // }, 1000);
+        }
+
+        function goBack() {
+            const team = new URLSearchParams(window.location.search).get('team') || 'marketing';
+            window.location.href = `./oht_ceo_approval_queue.html?team=${team}`;
+        }
+    </script>
+</body>
+</html>

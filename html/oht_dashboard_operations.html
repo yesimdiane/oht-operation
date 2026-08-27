@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OHT Operations Dashboard</title>
+<script src="oht_requests_data.js"></script>
+<script src="oht_requests_ui.js"></script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+        background: #ffffff;
+        color: #000000;
+        padding: 40px 20px;
+    }
+
+    .container { max-width: 1000px; margin: 0 auto; }
+
+    #checking {
+        min-height: 60vh; display: flex; align-items: center; justify-content: center;
+        font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #999999;
+    }
+    #dashboard { display: none; }
+
+    .header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .logo { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #000000; margin-bottom: 24px; text-transform: uppercase; }
+    .page-title { font-size: 32px; font-weight: 600; color: #000000; margin-bottom: 6px; }
+    .page-subtitle { font-size: 13px; color: #666666; }
+    .user-badge { text-align: right; font-size: 11px; color: #999999; }
+    .user-badge .name { font-size: 13px; color: #000000; font-weight: 600; margin-bottom: 4px; }
+    .access-pill { display: inline-block; margin-top: 6px; padding: 3px 8px; border: 1px solid #000000; border-radius: 3px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+
+    .tabs { display: flex; gap: 0; margin-bottom: 32px; border-bottom: 1px solid #e0e0e0; flex-wrap: wrap; }
+    .tab { padding: 14px 0; margin-right: 32px; font-size: 13px; font-weight: 600; color: #999999; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tab:hover { color: #000000; }
+    .tab.active { color: #000000; border-bottom-color: #000000; }
+
+    .subtabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .subtab { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 7px 14px; border: 1px solid #e0e0e0; border-radius: 20px; color: #666666; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .subtab:hover { border-color: #000000; color: #000000; }
+    .subtab.active { background: #000000; color: #ffffff; border-color: #000000; }
+
+    .section { margin-bottom: 48px; }
+    .section-title { font-size: 11px; font-weight: 700; color: #000000; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .section-count { font-size: 11px; font-weight: 700; color: #ffffff; background: #000000; border-radius: 10px; padding: 1px 8px; }
+
+    .attn-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 8px; }
+    .attn-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dot-red { background: #d33; }
+    .dot-amber { background: #d99a1f; }
+    .dot-gray { background: #999999; }
+    .attn-body { flex: 1; }
+    .attn-title { font-size: 13px; font-weight: 600; color: #000000; margin-bottom: 2px; }
+    .attn-sub { font-size: 12px; color: #666666; }
+    .attn-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #999999; border: 1px solid #e0e0e0; border-radius: 3px; padding: 3px 7px; white-space: nowrap; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .stat-card { border: 1px solid #e0e0e0; border-radius: 6px; padding: 18px 16px; }
+    .stat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #999999; margin-bottom: 10px; }
+    .stat-value { font-size: 26px; font-weight: 600; color: #000000; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #999999; padding: 0 12px 10px 12px; border-bottom: 1px solid #e0e0e0; }
+    td { font-size: 13px; color: #000000; padding: 12px; border-bottom: 1px solid #f0f0f0; }
+    tr:last-child td { border-bottom: none; }
+
+    .status-pill { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; }
+    .status-green  { background: #e8f7ec; color: #1c8a3e; }
+    .status-amber  { background: #fff4e0; color: #b5760a; }
+    .status-red    { background: #fde8e8; color: #c62828; }
+    .status-blue   { background: #eef0ff; color: #3d4bc9; }
+    .status-purple { background: #f3f0ff; color: #7a3fd1; }
+
+    .muted { color: #999999; font-size: 12px; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    @media (max-width: 640px) {
+        .stat-grid { grid-template-columns: repeat(2, 1fr); }
+        .header { flex-direction: column; gap: 16px; }
+        .user-badge { text-align: left; }
+    }
+
+    /* ===== Requests tab (shared across all department dashboards) ===== */
+    .req-header { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+    .req-new-btn { background: #000000; color: #ffffff; border: none; border-radius: 6px; padding: 10px 18px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; }
+    .req-new-btn:hover { background: #222222; }
+    .req-subtabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 1px solid #e0e0e0; flex-wrap: wrap; }
+    .req-subtab { padding: 10px 0; margin-right: 24px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #999999; cursor: pointer; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 6px; }
+    .req-subtab:hover { color: #000000; }
+    .req-subtab.active { color: #000000; border-bottom-color: #000000; }
+    .req-count { background: #f5f5f5; color: #666666; border-radius: 10px; padding: 1px 7px; font-size: 10px; }
+    .req-subtab.active .req-count { background: #000000; color: #ffffff; }
+    .req-list { display: flex; flex-direction: column; gap: 10px; }
+    .req-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; }
+    .req-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .req-type { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #999999; }
+    .req-from { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #666666; margin-bottom: 4px; }
+    .req-title { font-size: 14px; font-weight: 600; color: #000000; margin-bottom: 4px; }
+    .req-meta { font-size: 12px; color: #666666; margin-bottom: 12px; }
+    .req-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .req-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .req-btn { background: #000000; color: #ffffff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; }
+    .req-btn:hover { background: #222222; }
+    .req-btn-secondary { background: #ffffff; color: #000000; border: 1px solid #e0e0e0; }
+    .req-btn-secondary:hover { border-color: #000000; }
+    .req-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .req-modal-overlay.open { display: flex; }
+    .req-modal { background: #ffffff; border-radius: 10px; padding: 28px; max-width: 400px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .req-modal-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; }
+    .req-label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #999999; margin: 14px 0 6px; }
+    .req-input { width: 100%; border: 1px solid #e0e0e0; border-radius: 6px; padding: 9px 10px; font-size: 13px; font-family: inherit; color: #000000; }
+    .req-modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<div id="checking">Checking access…</div>
+
+<div id="dashboard">
+<div class="container">
+
+    <div class="header">
+        <div>
+            <div class="logo">OHT NYC</div>
+            <div class="page-title">Operations</div>
+            <div class="page-subtitle">Department Dashboard</div>
+        </div>
+        <div class="user-badge">
+            <div class="name" id="userName">—</div>
+            <div id="userEmail">—</div>
+            <div class="access-pill" id="accessPill">—</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="overview" onclick="switchTab('overview')">Overview</div>
+        <div class="tab" data-tab="cs" onclick="switchTab('cs')">CS</div>
+        <div class="tab" data-tab="purchasing" onclick="switchTab('purchasing')">Purchasing</div>
+        <div class="tab" data-tab="systems" onclick="switchTab('systems')">Systems</div>
+        <div class="tab" data-tab="requests" onclick="switchTab('requests')">Requests</div>
+    </div>
+
+    <!-- ===== OVERVIEW ===== -->
+    <div class="tab-panel active" id="tab-overview">
+        <div class="section">
+            <div class="section-title">
+                <span>Needs Your Attention</span>
+                <span class="section-count" id="attnCount">0</span>
+            </div>
+            <div id="overview-attention"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><span>Ops Snapshot</span></div>
+            <div class="stat-grid">
+                <div class="stat-card"><div class="stat-label">Open CS Cases</div><div class="stat-value">—</div></div>
+                <div class="stat-card"><div class="stat-label">Open POs</div><div class="stat-value">—</div></div>
+                <div class="stat-card"><div class="stat-label">Requests Inbox</div><div class="stat-value" id="statInboxCount">—</div></div>
+                <div class="stat-card"><div class="stat-label">Systems Pending</div><div class="stat-value">1</div></div>
+            </div>
+            <p class="muted" style="margin-top:12px;">Operations is a hub, not a source of truth — counts roll up from CS, Inventory, and Shipping once connected.</p>
+        </div>
+    </div>
+    <!-- ===== END OVERVIEW ===== -->
+
+    <!-- ===== CS ===== -->
+    <div class="tab-panel" id="tab-cs">
+        <div class="section">
+            <div class="section-title"><span>Escalated / Decision Needed</span></div>
+            <div class="subtabs" id="subtabs-cs">
+                <span class="subtab active" data-status="all" onclick="filterRows('cs','all')">All</span>
+                <span class="subtab" data-status="open" onclick="filterRows('cs','open')">Open</span>
+                <span class="subtab" data-status="escalated" onclick="filterRows('cs','escalated')">Escalated</span>
+                <span class="subtab" data-status="resolved" onclick="filterRows('cs','resolved')">Resolved</span>
+            </div>
+            <table>
+                <thead><tr><th>Case</th><th>Customer</th><th>Issue</th><th>Priority</th><th>Status</th></tr></thead>
+                <tbody id="rows-cs">
+                    <tr data-status="escalated"><td>#25455</td><td>Miu Onodera</td><td>USPS claim — stuck at NY Customs</td><td><span class="status-pill status-red">High</span></td><td><span class="status-pill status-red">Escalated</span></td></tr>
+                    <tr data-status="open"><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td><span class="status-pill status-blue">Open</span></td></tr>
+                    <tr data-status="resolved"><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td><span class="status-pill status-green">Resolved</span></td></tr>
+                </tbody>
+            </table>
+            <p class="muted" style="margin-top:12px;">Full case detail lives in the OHT Customer Support Airtable base. Escalations from Shipping now arrive via the Requests tab.</p>
+        </div>
+    </div>
+    <!-- ===== END CS ===== -->
+
+    <!-- ===== PURCHASING ===== -->
+    <div class="tab-panel" id="tab-purchasing">
+        <div class="section">
+            <div class="section-title"><span>Purchasing</span></div>
+            <div class="subtabs" id="subtabs-purchasing">
+                <span class="subtab active" data-status="all" onclick="filterRows('purchasing','all')">All</span>
+                <span class="subtab" data-status="reorder" onclick="filterRows('purchasing','reorder')">Reorder Needed</span>
+                <span class="subtab" data-status="ordered" onclick="filterRows('purchasing','ordered')">Ordered</span>
+                <span class="subtab" data-status="received" onclick="filterRows('purchasing','received')">Received</span>
+            </div>
+            <table>
+                <thead><tr><th>Item</th><th>Qty</th><th>Source</th><th>Status</th></tr></thead>
+                <tbody id="rows-purchasing">
+                    <tr data-status="reorder"><td>Black Shipping Bags</td><td>500</td><td>Inventory (below reorder point)</td><td><span class="status-pill status-red">Reorder Needed</span></td></tr>
+                    <tr data-status="ordered"><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td><span class="status-pill status-blue">Ordered</span></td></tr>
+                    <tr data-status="received"><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td><span class="status-pill status-green">Received</span></td></tr>
+                </tbody>
+            </table>
+            <p class="muted" style="margin-top:12px;">A Purchase Order becomes a real external order once placed with a supplier — until then it's tracked as a request in the Requests tab.</p>
+        </div>
+    </div>
+    <!-- ===== END PURCHASING ===== -->
+
+    <!-- ===== SYSTEMS ===== -->
+    <div class="tab-panel" id="tab-systems">
+        <div class="section">
+            <div class="section-title"><span>Connected Systems</span></div>
+            <table>
+                <thead><tr><th>System</th><th>Used For</th><th>Status</th></tr></thead>
+                <tbody>
+                    <tr><td>OHT Customer Support (Airtable)</td><td>CS case tracking</td><td><span class="status-pill status-green">Connected</span></td></tr>
+                    <tr><td>OHT CS Tracking — Private (Airtable)</td><td>Tracking numbers, isolated access</td><td><span class="status-pill status-green">Connected</span></td></tr>
+                    <tr><td>OHT Inventory (Airtable)</td><td>Stock, restock, QC</td><td><span class="status-pill status-green">Connected</span></td></tr>
+                    <tr><td>Requests (this page)</td><td>Internal cross-team requests</td><td><span class="status-pill status-amber">Frontend Only (MVP)</span></td></tr>
+                    <tr><td>Users Table / RBAC (Airtable)</td><td>Login + role-based dashboard access</td><td><span class="status-pill status-amber">Pending Setup</span></td></tr>
+                    <tr><td>Shopify</td><td>Orders, inventory source of truth, discount codes</td><td class="muted">—</td></tr>
+                    <tr><td>Google Drive</td><td>Brand assets</td><td class="muted">—</td></tr>
+                </tbody>
+            </table>
+            <p class="muted" style="margin-top:12px;">This tab tracks the systems these dashboards run on — not a customer-facing feature. The Requests tab is frontend-only for now; swap oht_requests_data.js for an Airtable fetch to make it real.</p>
+        </div>
+    </div>
+    <!-- ===== END SYSTEMS ===== -->
+
+    <!-- ===== REQUESTS ===== -->
+    <div class="tab-panel" id="tab-requests">
+        <div class="section">
+            <div class="section-title"><span>Requests</span></div>
+            <div id="requests-root"></div>
+        </div>
+    </div>
+    <!-- ===== END REQUESTS ===== -->
+
+</div>
+</div>
+
+<script>
+    const MY_DEPT = 'OPERATIONS';
+
+    function switchTab(name) {
+        document.querySelectorAll('.tabs .tab').forEach(function (el) {
+            el.classList.toggle('active', el.getAttribute('data-tab') === name);
+        });
+        document.querySelectorAll('.tab-panel').forEach(function (el) {
+            el.classList.toggle('active', el.id === 'tab-' + name);
+        });
+    }
+
+    function filterRows(section, status) {
+        const subtabs = document.getElementById('subtabs-' + section);
+        subtabs.querySelectorAll('.subtab').forEach(function (el) {
+            el.classList.toggle('active', el.getAttribute('data-status') === status);
+        });
+        const rows = document.getElementById('rows-' + section).querySelectorAll('tr');
+        rows.forEach(function (row) {
+            const statuses = (row.getAttribute('data-status') || '').split(' ');
+            const show = (status === 'all' || statuses.indexOf(status) !== -1);
+            row.style.display = show ? '' : 'none';
+        });
+    }
+
+    // ---- Access control ----
+    function checkAccess() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const testMode = urlParams.get('test') === '1';
+
+        let user = null;
+        if (testMode) {
+            user = { email: 'test.operations@ohtnyc.com', name: 'Test User', title: 'MANAGER', department: 'OPERATIONS', team: 'OPERATIONS' };
+        } else {
+            try { user = JSON.parse(sessionStorage.getItem('oht_user')); } catch (e) { user = null; }
+        }
+
+        if (!user || !user.email) { window.location.href = 'oht_dashboard_login.html'; return; }
+
+        const title = (user.title || '').toUpperCase();
+        const department = (user.department || '').toUpperCase();
+        const team = (user.team || '').toUpperCase();
+
+        const isCEO = (title === 'CEO' && department === 'EXECUTIVE' && team === 'ALL');
+        const isAdmin = (title === 'ADMIN' && department === 'ALL' && team === 'ALL');
+        const orgWideAccess = isCEO || isAdmin;
+        const deptAccess = (team === MY_DEPT);
+
+        if (!orgWideAccess && !deptAccess) { window.location.href = 'oht_no_access.html'; return; }
+
+        document.getElementById('userName').textContent = user.name || user.email;
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('accessPill').textContent = orgWideAccess ? (title + ' ACCESS') : (MY_DEPT + ' TEAM');
+
+        document.getElementById('checking').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+
+        OHT_REQUESTS_UI.mountOverviewAttention('#overview-attention', '#attnCount', MY_DEPT);
+        OHT_REQUESTS_UI.mount('#requests-root', MY_DEPT);
+        document.getElementById('statInboxCount').textContent = OHT_REQUESTS.inbox(MY_DEPT).length;
+    }
+
+    document.addEventListener('DOMContentLoaded', checkAccess);
+</script>
+
+</body>
+</html>

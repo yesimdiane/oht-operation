@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OHT Daily Operations - Project Approval</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            padding: 40px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: #2c2c2c;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 8px;
+        }
+
+        .project-meta {
+            font-size: 13px;
+            color: #999;
+            display: flex;
+            gap: 16px;
+        }
+
+        .project-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-number {
+            font-size: 11px;
+            font-weight: 600;
+            color: #FF9800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 12px;
+        }
+
+        .section-content {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #2c2c2c;
+            white-space: pre-wrap;
+        }
+
+        /* KPI Section */
+        .kpi-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            padding: 16px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .kpi-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c2c2c;
+        }
+
+        .kpi-progress {
+            font-size: 12px;
+            color: #FF9800;
+            font-weight: 600;
+        }
+
+        /* Actions */
+        .actions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-item {
+            padding: 12px;
+            background: #f9f9f9;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+        }
+
+        .action-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #FF9800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .action-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 6px;
+        }
+
+        .action-meta {
+            font-size: 12px;
+            color: #999;
+            display: flex;
+            gap: 16px;
+        }
+
+        /* CEO Support Info */
+        .ceo-support-box {
+            padding: 16px;
+            background: #fff3e0;
+            border: 1px solid #ffe0b2;
+            border-radius: 4px;
+            margin: 24px 0;
+        }
+
+        .ceo-support-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #f57c00;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .ceo-support-type {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 6px;
+        }
+
+        .ceo-support-details {
+            font-size: 13px;
+            color: #2c2c2c;
+            margin-bottom: 6px;
+        }
+
+        .ceo-support-deadline {
+            font-size: 12px;
+            color: #f57c00;
+            font-weight: 600;
+        }
+
+        /* Approval Decision Section */
+        .approval-section {
+            margin-top: 48px;
+            padding-top: 40px;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .approval-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 24px;
+        }
+
+        .approval-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .approval-button {
+            padding: 16px;
+            border: 2px solid #e8e8e8;
+            background: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .approval-button:hover {
+            border-color: #2c2c2c;
+            background: #f5f5f5;
+        }
+
+        .approval-button.selected {
+            border-color: #2c2c2c;
+            background: #2c2c2c;
+            color: #ffffff;
+        }
+
+        .approval-button.approve {
+            border-color: #4CAF50;
+        }
+
+        .approval-button.approve.selected {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .approval-button.revise {
+            border-color: #FF9800;
+        }
+
+        .approval-button.revise.selected {
+            background: #FF9800;
+            border-color: #FF9800;
+        }
+
+        .approval-button.reject {
+            border-color: #d32f2f;
+        }
+
+        .approval-button.reject.selected {
+            background: #d32f2f;
+            border-color: #d32f2f;
+        }
+
+        .approval-button-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .approval-button-desc {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* Comment Section */
+        .comment-section {
+            display: none;
+            margin-bottom: 24px;
+        }
+
+        .comment-section.active {
+            display: block;
+        }
+
+        .comment-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .comment-textarea:focus {
+            outline: none;
+            border-color: #2c2c2c;
+            background: #fafafa;
+        }
+
+        /* Submit Buttons */
+        .submit-section {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .submit-button {
+            padding: 12px 32px;
+            background: #2c2c2c;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            background: #000;
+        }
+
+        .submit-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .cancel-button {
+            padding: 12px 32px;
+            background: #ffffff;
+            color: #2c2c2c;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cancel-button:hover {
+            border-color: #2c2c2c;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .kpi-container {
+                grid-template-columns: 1fr;
+            }
+
+            .approval-options {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-section {
+                flex-direction: column-reverse;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="breadcrumb">
+                <a onclick="goBack()">← APPROVAL QUEUE</a>
+            </div>
+            <h1 class="page-title" id="projectName">Influencer Partnership Expansion</h1>
+            <div class="project-meta">
+                <span>🔵 MARKETING</span>
+                <span>👤 Diane</span>
+                <span>📅 Aug 28</span>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- 01 Why / Problem -->
+            <div class="section">
+                <div class="section-number">01</div>
+                <div class="section-title">Why This Project?</div>
+                <div class="section-content" id="whyProblem">Low conversion from outreach to collaboration + need to expand reach into fashion influencer + K-pop community</div>
+            </div>
+
+            <!-- 02 Goal -->
+            <div class="section">
+                <div class="section-number">02</div>
+                <div class="section-title">Goal</div>
+                <div class="section-content" id="goal">Increase qualified influencer collaborations from 4 to 10 per month by end of Q4. Build strong partnerships with mid-tier creators (50k-500k followers)</div>
+            </div>
+
+            <!-- 03 What Are We Looking At? -->
+            <div class="section">
+                <div class="section-number">03</div>
+                <div class="section-title">What Are We Looking At?</div>
+                <div class="kpi-container">
+                    <div class="kpi-field">
+                        <label class="kpi-label">Metric</label>
+                        <div class="kpi-value" id="kpiName">Confirmed Collaborations</div>
+                    </div>
+                    <div class="kpi-field">
+                        <label class="kpi-label">Current</label>
+                        <div class="kpi-value" id="kpiCurrent">4</div>
+                    </div>
+                    <div class="kpi-field">
+                        <label class="kpi-label">Target</label>
+                        <div class="kpi-value" id="kpiTarget">10 / month</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 04 Execution Plan -->
+            <div class="section">
+                <div class="section-number">04</div>
+                <div class="section-title">Execution Plan</div>
+                <div class="actions-list" id="actionsList">
+                    <div class="action-item">
+                        <div class="action-label">ACTION 01</div>
+                        <div class="action-title">Qualified Influencer Outreach</div>
+                        <div class="action-meta">
+                            <span>50 / WEEK</span>
+                            <span>Due: Every Friday</span>
+                        </div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-label">ACTION 02</div>
+                        <div class="action-title">Follow-ups & Negotiations</div>
+                        <div class="action-meta">
+                            <span>20 / WEEK</span>
+                            <span>Due: Every Friday</span>
+                        </div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-label">ACTION 03</div>
+                        <div class="action-title">Creator Shortlist Update</div>
+                        <div class="action-meta">
+                            <span>10 Creators</span>
+                            <span>Due: Sep 4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CEO Support Info -->
+            <div class="section">
+                <div class="section-number">05</div>
+                <div class="section-title">CEO Support Needed</div>
+                <div class="ceo-support-box">
+                    <div class="ceo-support-title">💰 Budget</div>
+                    <div class="ceo-support-type">Gifting Budget Increase</div>
+                    <div class="ceo-support-details">Current: $1,000 / month → Proposed: $1,500 / month</div>
+                    <div class="ceo-support-details">Reason: Higher budget for competitive gifting to mid-tier creators</div>
+                    <div class="ceo-support-deadline">Needed by: Aug 27</div>
+                </div>
+            </div>
+
+            <!-- CEO Decision Section -->
+            <div class="approval-section">
+                <div class="approval-title">What's Your Decision?</div>
+
+                <div class="approval-options">
+                    <button class="approval-button approve" onclick="selectDecision('approve')">
+                        <div class="approval-button-label">✓ APPROVE</div>
+                        <div class="approval-button-desc">Project moves forward</div>
+                    </button>
+                    <button class="approval-button revise" onclick="selectDecision('revise')">
+                        <div class="approval-button-label">⚡ REVISE</div>
+                        <div class="approval-button-desc">Need changes before approval</div>
+                    </button>
+                    <button class="approval-button reject" onclick="selectDecision('reject')">
+                        <div class="approval-button-label">✕ REJECT</div>
+                        <div class="approval-button-desc">Decline project</div>
+                    </button>
+                </div>
+
+                <!-- Comment Section (shown for Revise only) -->
+                <div class="comment-section" id="commentSection">
+                    <label class="comment-label">Comments for Team</label>
+                    <textarea class="comment-textarea" id="commentText" placeholder="What needs to change? Be specific."></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="submit-section">
+                    <button class="cancel-button" onclick="goBack()">Cancel</button>
+                    <button class="submit-button" id="submitBtn" onclick="submitDecision()" disabled>
+                        SUBMIT DECISION
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDecision = null;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('projectId') || 'proj_001';
+
+        // TODO: Airtable에서 projectId로 프로젝트 데이터 로드
+
+        function selectDecision(decision) {
+            selectedDecision = decision;
+            
+            // Update buttons
+            document.querySelectorAll('.approval-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.closest('.approval-button').classList.add('selected');
+
+            // Show/hide comment section
+            const commentSection = document.getElementById('commentSection');
+            if (decision === 'revise') {
+                commentSection.classList.add('active');
+            } else {
+                commentSection.classList.remove('active');
+            }
+
+            // Enable submit button
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        async function submitDecision() {
+            if (!selectedDecision) {
+                alert('Please select a decision');
+                return;
+            }
+
+            const submissionData = {
+                projectId: projectId,
+                decision: selectedDecision,
+                comments: selectedDecision === 'revise' ? document.getElementById('commentText').value : '',
+                decidedAt: new Date().toISOString()
+            };
+
+            console.log('Submitting decision:', submissionData);
+
+            // TODO: Backend으로 결정 저장
+            // POST /api/projects/{projectId}/decision
+
+            alert(`✅ Decision submitted: ${selectedDecision.toUpperCase()}`);
+            
+            // Redirect back to queue
+            // setTimeout(() => {
+            //     goBack();
+            // }, 1000);
+        }
+
+        function goBack() {
+            const team = new URLSearchParams(window.location.search).get('team') || 'marketing';
+            window.location.href = `./oht_ceo_approval_queue.html?team=${team}`;
+        }
+    </script>
+</body>
+</html>

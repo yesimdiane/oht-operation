@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OHT / Access Management</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body{margin:0;background:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#111}
+    .access-shell{max-width:1040px;margin:0 auto;padding:40px 20px 80px}
+    .access-header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:36px}
+    .eyebrow{font-size:10px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#999}
+    .access-title{margin:8px 0 6px;font-size:36px;font-weight:650;letter-spacing:-1px}
+    .access-subtitle{margin:0;font-size:13px;color:#777;line-height:1.5}
+    .permission-badge{border:1px solid #111;padding:9px 12px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:#fff;white-space:nowrap}
+    .access-card{background:#fff;border:1px solid #d9d9d9}
+    .access-row{display:grid;grid-template-columns:220px 1fr;gap:24px;padding:24px;border-bottom:1px solid #e6e6e6;align-items:start}
+    .access-row:last-child{border-bottom:0}
+    .field-label{font-size:11px;font-weight:750;letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px}
+    .field-help{font-size:11px;color:#999;line-height:1.45}
+    .field-control input,.field-control select{width:100%;min-height:44px;border:1px solid #d0d0d0;background:#fff;border-radius:2px;padding:0 12px;font:inherit;font-size:13px;box-sizing:border-box}
+    .field-control input:focus,.field-control select:focus{outline:none;border-color:#111}
+    .status-wrap{display:flex;align-items:center;gap:12px;min-height:44px}
+    .switch{position:relative;width:46px;height:26px;display:inline-block}.switch input{opacity:0;width:0;height:0}
+    .slider{position:absolute;inset:0;background:#d9d9d9;cursor:pointer;transition:.2s;border-radius:999px}
+    .slider:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;transition:.2s;border-radius:50%}
+    .switch input:checked + .slider{background:#111}.switch input:checked + .slider:before{transform:translateX(20px)}
+    .status-text{font-size:12px;font-weight:650}
+    .access-footer{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:20px}
+    .security-note{font-size:11px;color:#999;line-height:1.45;max-width:560px}
+    .button-group{display:flex;gap:10px}
+    .btn{border:1px solid #cfcfcf;background:#fff;color:#111;min-height:42px;padding:0 18px;border-radius:2px;font-size:11px;font-weight:750;letter-spacing:.7px;text-transform:uppercase;cursor:pointer}
+    .btn.primary{background:#111;border-color:#111;color:#fff}
+    .preview{margin-top:28px;border-top:1px solid #ddd;padding-top:24px}
+    .preview-box{margin-top:12px;background:#111;color:#fff;padding:18px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+    @media(max-width:720px){.access-header{flex-direction:column}.access-row{grid-template-columns:1fr;gap:12px}.access-footer{flex-direction:column;align-items:stretch}.button-group{width:100%}.button-group .btn{flex:1}}
+  </style>
+</head>
+<body>
+  <main class="access-shell">
+    <header class="access-header">
+      <div>
+        <div class="eyebrow">OHT / Internal Ops</div>
+        <h1 class="access-title">Access Management</h1>
+        <p class="access-subtitle">Assign each employee a unique email identity, title, department, and team.</p>
+      </div>
+      <div class="permission-badge">Executive Access Only</div>
+    </header>
+
+    <section class="access-card">
+      <div class="access-row">
+        <div><div class="field-label">01 Email / Unique ID</div><div class="field-help">Google login email. This is the employee's unique account identifier.</div></div>
+        <div class="field-control"><input id="access-email" type="email" placeholder="name@ohtnyc.com" autocomplete="off"></div>
+      </div>
+
+      <div class="access-row">
+        <div><div class="field-label">02 Employee</div><div class="field-help">Display name associated with this account.</div></div>
+        <div class="field-control"><input id="access-name" type="text" placeholder="Employee name" autocomplete="off"></div>
+      </div>
+
+      <div class="access-row">
+        <div><div class="field-label">03 Title</div><div class="field-help">Determines what the employee is allowed to do.</div></div>
+        <div class="field-control">
+          <select id="access-title">
+            <option value="">Select title</option>
+            <option value="CEO">CEO</option>
+            <option value="ADMIN">ADMIN</option>
+            <option value="EXECUTIVE">EXECUTIVE</option>
+            <option value="DIRECTOR">DIRECTOR</option>
+            <option value="HEAD">HEAD</option>
+            <option value="MANAGER">MANAGER</option>
+            <option value="EMPLOYEE">EMPLOYEE</option>
+            <option value="INTERN">INTERN</option>
+            <option value="CONTRACTOR">CONTRACTOR</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="access-row">
+        <div><div class="field-label">04 Department</div><div class="field-help">Determines which department data the employee can access.</div></div>
+        <div class="field-control">
+          <select id="access-department">
+            <option value="">Select department</option>
+            <option value="EXECUTIVE">EXECUTIVE</option>
+            <option value="MARKETING">MARKETING</option>
+            <option value="CONTENT">CONTENT</option>
+            <option value="SHIPPING">SHIPPING</option>
+            <option value="INVENTORY">INVENTORY</option>
+            <option value="OPERATIONS">OPERATIONS</option>
+            <option value="KOREA OPS">KOREA OPS</option>
+            <option value="ALL">ALL</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="access-row">
+        <div><div class="field-label">05 Team</div><div class="field-help">Narrows visibility to a specific working team when needed.</div></div>
+        <div class="field-control">
+          <select id="access-team">
+            <option value="">Select team</option>
+            <option value="ALL">ALL</option>
+            <option value="INFLUENCER">INFLUENCER</option>
+            <option value="SOCIAL">SOCIAL</option>
+            <option value="CREATIVE">CREATIVE</option>
+            <option value="ECOMMERCE">ECOMMERCE</option>
+            <option value="CUSTOMER SERVICE">CUSTOMER SERVICE</option>
+            <option value="FULFILLMENT">FULFILLMENT</option>
+            <option value="STOCK MANAGEMENT">STOCK MANAGEMENT</option>
+            <option value="KOREA">KOREA</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="access-row">
+        <div><div class="field-label">06 Account Status</div><div class="field-help">Inactive accounts cannot access the internal dashboard.</div></div>
+        <div class="field-control">
+          <div class="status-wrap">
+            <label class="switch"><input id="access-active" type="checkbox" checked><span class="slider"></span></label>
+            <span id="access-status-text" class="status-text">ACTIVE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="access-footer">
+      <div class="security-note">Only users authorized as EXECUTIVE should be able to save permission changes. Final authorization must also be validated by the backend.</div>
+      <div class="button-group">
+        <button class="btn" type="button" id="access-clear">Clear</button>
+        <button class="btn primary" type="button" id="access-save">Save Access</button>
+      </div>
+    </div>
+
+    <section class="preview">
+      <div class="eyebrow">Permission Record Preview</div>
+      <div id="access-preview" class="preview-box">No employee selected.</div>
+    </section>
+  </main>
+
+  <script>
+    const emailInput=document.getElementById("access-email");
+    const nameInput=document.getElementById("access-name");
+    const titleSelect=document.getElementById("access-title");
+    const departmentSelect=document.getElementById("access-department");
+    const teamSelect=document.getElementById("access-team");
+    const activeToggle=document.getElementById("access-active");
+    const statusText=document.getElementById("access-status-text");
+    const preview=document.getElementById("access-preview");
+
+    function getAccessRecord(){
+      return {
+        email:emailInput.value.trim(),
+        name:nameInput.value.trim(),
+        title:titleSelect.value,
+        department:departmentSelect.value,
+        team:teamSelect.value,
+        active:activeToggle.checked
+      };
+    }
+
+    function updatePreview(){
+      statusText.textContent=activeToggle.checked?"ACTIVE":"INACTIVE";
+      const record=getAccessRecord();
+      if(!record.email&&!record.name&&!record.title&&!record.department&&!record.team){
+        preview.textContent="No employee selected.";
+        return;
+      }
+      preview.textContent=JSON.stringify(record,null,2);
+    }
+
+    [emailInput,nameInput,titleSelect,departmentSelect,teamSelect,activeToggle].forEach(el=>el.addEventListener("input",updatePreview));
+
+    document.getElementById("access-clear").addEventListener("click",()=>{
+      emailInput.value="";
+      nameInput.value="";
+      titleSelect.value="";
+      departmentSelect.value="";
+      teamSelect.value="";
+      activeToggle.checked=true;
+      updatePreview();
+    });
+
+    document.getElementById("access-save").addEventListener("click",()=>{
+      const record=getAccessRecord();
+      if(!record.email||!record.name||!record.title||!record.department||!record.team){
+        alert("Please complete Email, Employee, Title, Department, and Team.");
+        return;
+      }
+      console.log("ACCESS RECORD:",record);
+      alert("Access record is ready to connect to the backend.");
+    });
+
+    updatePreview();
+  </script>
+</body>
+</html>
