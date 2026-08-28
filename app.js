@@ -6,6 +6,7 @@ const ROUTES = {
   SHIPPING: "html/dashboard/oht_dashboard_shipping.html",
   INVENTORY: "html/dashboard/oht_dashboard_inventory.html",
   OPERATIONS: "html/dashboard/oht_dashboard_operations.html",
+  KOREA OPS: "html/dashboard/oht_dashboard_korea_ops.html",
 
   WELCOME: "html/oht_welcome_unregistered.html",
 
@@ -115,47 +116,82 @@ function appUrl(path) {
 
 const ROUTES = {
 
-  // LOGIN
-  LOGIN:
-    "html/oht_dashboard_login.html",
+    // LOGIN
+    LOGIN:
+        "index.html",
 
+    // CEO / EXECUTIVE / ADMIN
+    CEO:
+        "html/dashboard/ceo_dashboard_layout_preview.html",
 
-  // CEO / EXECUTIVE / ADMIN
-  CEO:
-    "html/Dashboard/oht_dashboard_ceo.html",
+    EXECUTIVE:
+        "html/dashboard/oht_dashboard_executive.html",
 
-  ADMIN:
-    "html/Dashboard/oht_dashboard_admin.html",
+    ADMIN:
+        "html/access-management.html",
 
-  EXECUTIVE:
-    "html/Dashboard/oht_dashboard_executive.html",
+    // DEPARTMENT DASHBOARDS
+    MARKETING:
+        "html/dashboard/oht_dashboard_marketing.html",
 
+    CONTENT:
+        "html/dashboard/oht_dashboard_content.html",
 
+    SHIPPING:
+        "html/dashboard/oht_dashboard_shipping.html",
+
+    INVENTORY:
+        "html/dashboard/oht_dashboard_inventory.html",
+
+    OPERATIONS:
+        "html/dashboard/oht_dashboard_operations.html",
+
+    // PROJECT / APPROVAL
+    SUBMIT_PROJECT:
+        "html/submit-project.html",
+
+    CEO_APPROVAL:
+        "html/oht_ceo_approval_queue.html",
+
+    PROJECT_APPROVAL:
+        "html/oht_ceo_project_approval.html",
+
+    APPROVAL_DETAIL:
+        "html/oht_approval_request_detail.html",
+
+    // DAILY / REVIEW
+    DAILY_UPDATE:
+        "html/daily-update.html",
+
+    REVIEW_ALL:
+        "html/review-all.html",
+
+    PROJECT:
+        "html/project.html"
+};
   // DEPARTMENT COMMUNICATION DASHBOARDS
   MARKETING:
-    "html/Dashboard/department_communication/marketing_communicating.html",
+    "html/dashboard/department_communication/marketing_communicating.html",
 
   CONTENT:
-    "html/Dashboard/department_communication/content_communicating.html",
+    "html/dashboard/department_communication/content_communicating.html",
 
   SHIPPING:
-    "html/Dashboard/department_communication/shipping_communicating.html",
+    "html/dashboard/department_communication/shipping_communicating.html",
 
   INVENTORY:
-    "html/Dashboard/department_communication/inventory_communicating.html",
+    "html/dashboard/department_communication/inventory_communicating.html",
 
   OPERATIONS:
-    "html/Dashboard/department_communication/operations_communicating.html",
+    "html/dashboard/department_communication/operations_communicating.html",
 
-
-  // NOT BUILT YET
   "KOREA OPS":
-    "html/Dashboard/oht_dashboard_korea_ops.html",
+    "html/dashboard/oht_dashboard_korea_ops.html",
 
 
   // ACCESS
   WELCOME:
-    "html/Dashboard/oht_welcome_unregistered.html",
+    "html/dashboard/oht_welcome_unregistered.html",
 
   NO_ACCESS:
     "html/oht_no_access.html",
