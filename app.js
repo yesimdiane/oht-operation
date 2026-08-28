@@ -1,22 +1,3 @@
-const ROUTES = {
-  LOGIN: "html/oht_dashboard_login.html",
-
-  MARKETING: "html/dashboard/oht_dashboard_marketing.html",
-  CONTENT: "html/dashboard/oht_dashboard_content.html",
-  SHIPPING: "html/dashboard/oht_dashboard_shipping.html",
-  INVENTORY: "html/dashboard/oht_dashboard_inventory.html",
-  OPERATIONS: "html/dashboard/oht_dashboard_operations.html",
-  KOREA OPS: "html/dashboard/oht_dashboard_korea_ops.html",
-
-  WELCOME: "html/oht_welcome_unregistered.html",
-
-  ADMIN: "html/oht_dashboard_admin.html",
-  EXECUTIVE: "html/oht_dashboard_executive.html",
-  CEO: "html/oht_dashboard_ceo.html",
-
-  NO_ACCESS: "html/oht_no_access.html"
-};
-
 // ======================================================
 // CONFIG
 // ======================================================
