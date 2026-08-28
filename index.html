@@ -563,11 +563,33 @@
                     <div class="login-divider-line"></div>
                 </div>
                <a
-  class="demo-btn"
-  href="html/dashboard/oht_dashboard_marketing.html?test=1"
-  style="display:block; text-decoration:none; color:#000;"
 >
-  View Demo Version
+  <select
+  id="demoDepartment"
+  style="
+    width:100%;
+    padding:12px 16px;
+    border:1px solid #d0d0d0;
+    border-radius:4px;
+    background:#fff;
+    font-size:13px;
+  "
+>
+  <option value="">Select Department</option>
+  <option value="marketing">Marketing</option>
+  <option value="content">Content</option>
+  <option value="shipping">Shipping</option>
+  <option value="inventory">Inventory</option>
+  <option value="operations">Operations</option>
+</select>
+
+<button
+  class="demo-btn"
+  type="button"
+  onclick="openDepartmentDemo()"
+>
+  View Demo Dashboard
+</button>
 </a>
             </div>
         </div>
@@ -1048,6 +1070,25 @@
             document.getElementById('currentDate').textContent = today;
             document.getElementById('ceoCurrentDate').textContent = today;
         }
-    </script>
+<script>
+function openDepartmentDemo() {
+  const department = document.getElementById("demoDepartment").value;
+
+  const demoRoutes = {
+    marketing: "html/dashboard/oht_dashboard_marketing.html?test=1",
+    content: "html/dashboard/oht_dashboard_content.html?test=1",
+    shipping: "html/dashboard/oht_dashboard_shipping.html?test=1",
+    inventory: "html/dashboard/oht_dashboard_inventory.html?test=1",
+    operations: "html/dashboard/oht_dashboard_operations.html?test=1"
+  };
+
+  if (!department) {
+    alert("Please select a department.");
+    return;
+  }
+
+  window.location.href = demoRoutes[department];
+}
+</script>
 </body>
 </html>
