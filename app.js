@@ -1622,30 +1622,6 @@ function loginAsDepartmentDemo() {
     sessionStorage.setItem(
         "oht_user",
         JSON.stringify(user)
-    );
-
-    const routes = {
-        "MARKETING":
-            "dashboard/oht_dashboard_marketing.html",
-
-        "CONTENT":
-            "dashboard/oht_dashboard_content.html",
-
-        "SHIPPING":
-            "dashboard/oht_dashboard_shipping.html",
-
-        "INVENTORY":
-            "dashboard/oht_dashboard_inventory.html",
-
-        "OPERATIONS":
-            "dashboard/oht_dashboard_operations.html",
-
-        "KOREA OPS":
-            "oht_dashboard_korea_ops.html",
-
-        "EXECUTIVE":
-            "oht_dashboard_executive.html"
-    };
 
     const destination = routes[department];
 
