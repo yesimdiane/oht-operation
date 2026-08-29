@@ -573,14 +573,20 @@
     font-size:13px;
   "
 >
-<option value="ceo">CEO</option>
-<option value="executive">Executive</option>
-  <option value="">Select Department</option>
-  <option value="marketing">Marketing</option>
-  <option value="content">Content</option>
-  <option value="shipping">Shipping</option>
-  <option value="inventory">Inventory</option>
-  <option value="operations">Operations</option>
+  <option value="">Select Demo Dashboard</option>
+
+  <optgroup label="── LEADERSHIP ──">
+    <option value="ceo">CEO Dashboard</option>
+    <option value="executive">Executive Dashboard</option>
+  </optgroup>
+
+  <optgroup label="── DEPARTMENTS ──">
+    <option value="marketing">Marketing</option>
+    <option value="content">Content</option>
+    <option value="shipping">Shipping</option>
+    <option value="inventory">Inventory</option>
+    <option value="operations">Operations</option>
+  </optgroup>
 </select>
 
 <button
@@ -1073,6 +1079,9 @@ function openDepartmentDemo() {
   const department = document.getElementById("demoDepartment").value;
 
   const demoRoutes = {
+    ceo: "html/dashboard/ceo_dashboard_layout_preview.html?test=1",
+    executive: "html/dashboard/oht_dashboard_executive.html?test=1",
+
     marketing: "html/dashboard/oht_dashboard_marketing.html?test=1",
     content: "html/dashboard/oht_dashboard_content.html?test=1",
     shipping: "html/dashboard/oht_dashboard_shipping.html?test=1",
@@ -1081,7 +1090,7 @@ function openDepartmentDemo() {
   };
 
   if (!department) {
-    alert("Please select a department.");
+    alert("Please select a dashboard.");
     return;
   }
 
